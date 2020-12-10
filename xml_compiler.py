@@ -13,5 +13,4 @@ class JackXmlCompiler:
     def compile_tokens(self) -> None:
         with self._output.element('tokens'):
             while not self._lexer.finished:
-                while not self._lexer.finished:
-                    self._output.write_token(self._lexer.next())
+                self._output.write_token(self._lexer.next())

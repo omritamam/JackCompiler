@@ -40,7 +40,7 @@ class XmlWriter:
         self._write_tag(token.type)
         self._file_obj.write(f' {token.value} ')
         self._write_tag(token.type, closing=True)
-        self._write_new_line
+        self._write_new_line()
 
 
 class _XmlElementContext:
