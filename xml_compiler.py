@@ -1,11 +1,10 @@
-from lexer import Lexer
+from lexer import Lexer, Token
 from xml_writer import XmlWriter
 from typing import TextIO
 
 
 class JackXmlCompiler:
     def __init__(self, content: str, output_file: TextIO):
-        self._output = output_file
         self._lexer = Lexer(content)
         self._output = XmlWriter(output_file)
 

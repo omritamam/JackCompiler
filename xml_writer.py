@@ -2,10 +2,10 @@ from lexer import Token
 
 
 class XmlWriter:
-    def __init__(self, file_obj, indextation='    '):
+    def __init__(self, file_obj, indentation='    '):
         self._file_obj = file_obj
         self._hierarchy_stack = []
-        self._indentation = indextation
+        self._indentation = indentation
 
     def _write_new_line(self):
         self._file_obj.write('\n')
