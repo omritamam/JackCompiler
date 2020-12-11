@@ -1,2 +1,2 @@
-from .lexer import Lexer, TokenParseError
-from .token import Token
+from .lexer import Lexer, TokenParseError       # noqa: F401
+from .token import Token                        # noqa: F401

@@ -5,8 +5,10 @@ class Token:
 
     @property
     def value(self):
+        """The value of the token"""
         return self._value
 
     @property
     def type(self):
+        """The type of the token"""
         return self._type

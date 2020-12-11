@@ -1,12 +1,11 @@
 import argparse
 import sys
 import os
-import re
-
+from typing import Sequence
 from xml_compiler import JackXmlCompiler
 
 
-def files_from_path(path):
+def files_from_path(path: str) -> Sequence[str]:
     """Translate supplied assembly path to a list of objects to assemble"""
     if os.path.isdir(path):
         # Handle case path is a directory
@@ -23,14 +22,15 @@ def files_from_path(path):
         raise ValueError(f'Path "{str(path)}" is not a file or a directory')
 
 
-def handle_file(input_path, output_path):
+def handle_file(input_path: str, output_path: str) -> None:
+    """Compiles a given file using JackXmlCompiler"""
     with open(input_path, 'r') as input_obj:
         with open(output_path, 'w') as output_obj:
             compiler = JackXmlCompiler(input_obj.read(), output_obj)
             compiler.compile_tokens()
 
 
-def main():
+def main() -> int:
     """Main entrypoint of the module"""
     # Parse args
     parser = argparse.ArgumentParser(description="Jack language compiler.")
