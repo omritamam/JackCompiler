@@ -122,7 +122,7 @@ class Lexer:
                         self.update_position()
                 else:
                     self.update_position()
-        except: EndOfFileError
+        except EndOfFileError:
             raise TokenParseError("endless doucumantion", self._position["last_line"], self._position["last_coulmn"])
 
     def next(self, token_type: Union[None, str] = None) -> Token:

@@ -42,3 +42,37 @@ class JackXmlCompiler:
         with self._output.element('tokens'):
             while not self._lexer.finished:
                 self._output.write_token(self._lexer.next())
+
+    def compile_class(self) -> None:
+        # with self._output.element('tokens'):
+        self._output._start_element("class")
+        self._output.write_token(self._lexer.next("identifier"))  # className
+        self._output.write_token(self._lexer.next("symbol"))  # {
+        while(self._lexer.peek().value in {"static", "field"}):  # plural classVarDec
+            self.compile_classVarDec()
+        while (self._lexer.peek().value in {'constructor', 'function', 'method'}):  # plural subroutineDec
+            self.compile_subroutineDec()
+        self._output.write_token(self._lexer.next("symbol"))  # }
+        self._output._close_element()
+
+    def compile_classVarDec(self):
+        self._output._start_element("classVarDec")
+        self._output.write_token(self._lexer.next("keyword"))  # static | field
+        self._output.write_token(self._lexer.next())  # int | char | boolean | className
+        while(self._lexer.peek().value == ',')):  # plural , varname
+            self._output.write_token(self._lexer.next("symbol"))  # ,
+            self._output.write_token(self._lexer.next("identifier")) # varName
+        self._output.write_token(self._lexer.next("symbol")) # ;
+        self._output._close_element()
+
+    def compile_subrutineDec(self):
+        self._output._start_element("subrutineDec")
+        self._output.write_token(self._lexer.next("keyword")) # constructor | function | method
+        self._output.write_token(self._lexer.next()) # void | int | char | boolean | className 
+        self._output.write_token(self._lexer.next("identifier")) # subroutineName
+        self._output.write_token(self._lexer.next("symbol")) # (
+        self.compile_parameterList()
+        self._output.write_token(self._lexer.next("symbol")) # )
+        self.compile_subroutineBody()
+        self._output._close_element()
+
