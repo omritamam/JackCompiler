@@ -14,7 +14,7 @@ class Lexer:
     _computed: Sequence
     _position: Mapping[str, int]
 
-    def __init__(self, content):
+    def __init__(self, content: str):
         self._content = content
         self._computed = []
         self._position = {
