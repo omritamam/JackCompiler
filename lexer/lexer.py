@@ -1,9 +1,12 @@
 from .token import Token
-from typing import Union, Sequence, Mapping
+from typing import Sequence, Mapping
+import string
 
-SYMBOLS = {'{', '}', '(', ')', '[', ']', '.', ', ', ';', '+', '-', '*', '/', '&', ', ', '<', '>', '=', '~', '|'}
-KEYWORDS = {'class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char', 
+SYMBOLS = {'{', '}', '(', ')', '[', ']', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~'}
+KEYWORDS = {'class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char',
             'boolean', 'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return'}
+WHITESPACES_CHARS = (' ', '\t', '\n')
+IDENTIFIER_ALLOWED_CHARS = string.ascii_letters + '_' + string.digits
 
 
 class Lexer:
@@ -12,7 +15,7 @@ class Lexer:
     _position: Mapping[str, int]
 
     def __init__(self, content):
-        self._content = content.splitlines()
+        self._content = content
         self._computed = []
         self._position = {
             'last_line': 0,
@@ -21,169 +24,127 @@ class Lexer:
             'column': 0
         }
 
-    def update_position(self, last_position: bool = False) -> bool:
-        "return true if the position updated to the next line"
-        "last position mark if the methof should update last_line, last_column"
-        # end of line
-        if self._position["column"] == len(self._content[self._position["line"]])-1:
-            self._position["line"] += 1
-            self._position["column"] = 0
-            # empty lines
-            while not self._content[self._position["line"]]:
-                self._position["line"] += 1
-                self._position["column"] = 0
-            if last_position:
-                self._position["last_line"] = self._position["line"]
-                self._position["last-column"] = self._position["column"]
+    def _get_next_char_with_comments(self, peek: bool = False) -> str:
+        """Returns the next unparsed char without skipping comments"""
+        # Check if we read beyond the file limits
+        if not self._content:
+            raise EndOfFileError(self.position)
 
-            # end of all lines
-            if len(self._content) == self._position["line"]:
-                raise EndOfFileError      
-            return True
-        
+        # Read next character
+        result = self._content[0]
+        if not peek:
+            self._content = self._content[1:]
+
+        # Update self._position
+        if result == '\n':
+            self._position['line'] += 1
+            self._position['column'] = 0
         else:
-            self._position["column"] += 1
-            if last_position:
-                self._position["last_line"] = self._position["line"]
-                self._position["last-column"] = self._position["column"]
-            return False
- 
-    def get_constantInt(self, token_type) -> Token:
-        value = ""
+            self._position['column'] += 1
 
-        while self.ch.isnumeric():
-            value += self.ch
-            if self.update_position():
-                # TODO: raise a error of newline at constantInt
-                pass
-            line = self._position["line"]
-            column = self._position["column"]
+        # Return read char
+        return result
 
-        token = Token(value, "constantInt")
-        if token_type and token.type != token_type:
-            raise TokenTypeError(token_type, token.type, self._position)
-        return token
+    def _get_next_char(self, peek: bool = False) -> str:
+        """Returns the next unparsed char while skipping comments"""
+        # In case the caller asked for peek, backup self._content original state
+        if peek:
+            original_content = self._content
+            original_position = self._position.copy()
 
-    def get_constantString(self, token_type) -> Token:
-        value = ""
-        try:
-            while ord(self.ch) != 34:
-                value += self.ch
-                if self.update_position():
-                    raise InvalidNewLineError(self._position)
-        except (EndOfFileError):
-            raise EndlessStringError(self._position) 
-        # eat the closing quotation 
-        self.update_position()
-        token = Token(value, "constantString")
-        if token_type and token.type != token_type:
-            raise TokenTypeError(token_type, token.type, self._position)
-        return token
-        
-    def get_keyword_or_identifier(self, token_type):
-        word = ""
-        while (self.ch.isalpha() or self.ch.isnumeric() or self.ch == "_"):
-            word += self.ch
-            if self.update_position():
-                raise TokenParseError("A new line in keyword / identifier", self.position["line"], self.position["column"])
-        if word in KEYWORDS:
-            token = Token(word, "keyword")
+        if self._content.startswith('//'):
+            # Next char starts a line comment
+            next_character = self._get_next_char_with_comments()
+            while next_character != '\n':
+                next_character = self._get_next_char_with_comments()
+
+            # Comment was ended, we can return next character.
+            # Since a new comment can begin right away, we will call self._get_next_char
+            # to handle the next character
+            result = self._get_next_char()
+
+        elif self._content.startswith('/*'):
+            # Next char starts a multiline comment
+            next_character = self._get_next_char_with_comments()
+            while not (next_character == '*' and self._get_next_char_with_comments(peek=True) == '/'):
+                next_character = self._get_next_char_with_comments()
+
+            # Next character is '/' (after we poped '*'), pop it
+            self._get_next_char_with_comments()
+
+            # Comment was ended, we can return next character.
+            # Since a new comment can begin right away, we will call self._get_next_char
+            # to handle the next character
+            result = self._get_next_char()
+
         else:
-            token = Token(word,  "identifier")
-        if token_type and token.type != token_type:
-            raise TokenTypeError(token_type, token.type, self._position)
-        return token
+            # Next char is a regular character
+            result = self._get_next_char_with_comments()
 
-    def peek_position(self):
-        if self._position["column"] == len(self._content[self._position["line"]])-1:
-            # end of all lines
-            if len(self._content) == self._position["line"]+1:
-                raise EndOfFileError()
-            return self._position["line"] + 1, 0
-        
+        # We can't modify self._content if the caller asked for peek, restore it to its original state
+        if peek:
+            self._content = original_content
+            self._position = original_position
+
+        return result
+
+    def _get_next_sequence(self, allowed_chars: str) -> str:
+        """Return the next maximum valid sequence that contains only allowed_chars"""
+        result = ''
+        # Check that there is a next_char, and that the next char is in allowed_chars
+        while self._content and self._get_next_char(peek=True) in allowed_chars:
+            result += self._get_next_char()
+        return result
+
+    def _skip_whitespaces(self) -> None:
+        """Pops from queue all whitespaces characters"""
+        self._get_next_sequence(WHITESPACES_CHARS)
+
+    def next(self) -> Token:
+        """Return the next maximum valid sequence that can be parsed as a token"""
+        # Update last position
+        self._position['last_line'], self._position['last_column'] = self.line, self.column
+
+        # Skip whitespaces
+        self._skip_whitespaces()
+
+        # Determine which token type is being parsed
+        next_char = self._get_next_char()
+        if next_char in string.digits:
+            # Next token is a integerConstant
+            full_expression = next_char + self._get_next_sequence(string.digits)
+            return Token(full_expression, 'integerConstant')
+
+        elif next_char in string.ascii_letters or next_char == '_':
+            # Next token is an identifier or a keyword
+            full_expression = next_char + self._get_next_sequence(IDENTIFIER_ALLOWED_CHARS)
+            if full_expression in KEYWORDS:
+                return Token(full_expression, 'keyword')
+            else:
+                return Token(full_expression, 'identifier')
+
+        elif next_char == '"':
+            # Next token is a stringConstant
+            full_expression = ''
+            next_char = self._get_next_char()
+            while next_char != '"':
+                if next_char == '\n':
+                    raise UnterminatedStringError(self.position)
+
+                full_expression += next_char
+                next_char = self._get_next_char()
+
+            return Token(full_expression, 'stringConstant')
+
+        elif next_char in SYMBOLS:
+            # Next token is a symbol
+            return Token(next_char, 'symbol')
+
         else:
-            return self._position["line"], self._position["column"] + 1
-    
-    def remove_comment(self):
-        new_line = False
-        while not new_line:
-            new_line = self.update_position()
+            # next_char cannot start any valid token
+            raise UnexpectedCharacterError(next_char, self.position)
 
-    def remove_documentation(self):
-        try:
-            while True:
-                if ord(self.ch) == 42:
-                    line, column = self.peek_position()
-                    if ord(self._content[line][column]) == 47:
-                        self.update_position()
-                        self.update_position()
-                        return
-                    else:
-                        self.update_position()
-                else:
-                    self.update_position()
-        except EndOfFileError:
-            raise TokenParseError("endless doucumantion", self._position["last_line"], self._position["last_coulmn"])
-
-    def next(self, token_type: Union[None, str] = None) -> Token:
-        """Pops the next parsed token"""
-        if self._computed:
-            return self._computed.pop()
-        # empty line
-        while not self._content[self._position["line"]]: 
-            self.update_position()
-        line = self._position["line"]
-        column = self._position["column"]
-        
-        # updates last positions values
-        self._position["last_line"] = line
-        self._position["last-column"] = column
-
-        # ord('tab') = 32, ord(' ') = 9 
-        if ord(self.ch) == 32 or ord(self.ch) == 9:
-            self.update_position()
-            return self.next(token_type)
-        # constantInt 
-        if self.ch.isnumeric():
-            return self.get_constantInt(token_type)
-        # constantString
-        # ASCII code 34 is quotaion mark 
-        if ord(self.ch) == 34:
-            self.update_position()
-            return self.get_constantString(token_type)
-
-        # symbol or comment
-        if self.ch in SYMBOLS:
-            # ord('/') = 47
-            if ord(self.ch) == 47:
-                line, column = self.peek_position()
-                # check if comment //
-                if ord(self._content[line][column]) == 47:
-                    self.remove_comment()
-                    return self.next(token_type)
-                # check if doucumantition /**
-                # ord ('*') = 42
-                if ord(self._content[line][column]) == 42:
-                    self.update_position()
-                    line, column = self.peek_position()
-                    if ord(self._content[line][column]) == 42:
-                        self.remove_documentation()
-                        return self.next(token_type)
-                    else:
-                        raise TokenParseError("/* is not a legal sequance",
-                              self._position["line"], self._position["column"])
-
-            token = Token(self.ch, "symbol")
-            self.update_position()
-            return token
-         
-        return self.get_keyword_or_identifier(token_type)
-        # unreachable code
-
-        # Parse next token
-        raise NotImplementedError
-
-    def eat(self, value, token_type: str = None) -> None:
+    def eat(self, value: str, token_type: str = None) -> None:
         """
         Pops the next parsed token and verify it matches to the give value and type.
         If no token_type was given, only value match is checked.
@@ -200,41 +161,41 @@ class Lexer:
         return next_token
 
     @property
-    def ch(self):
-        line = self._position["line"]
-        column = self._position["column"]
-        return self._content[line][column]
-
-    @property
     def position(self) -> Mapping[str, int]:
         """Returns the current position"""
         return self._position.copy()
 
     @property
+    def line(self) -> int:
+        """Return the current line"""
+        return self._position["line"]
+
+    @property
+    def column(self) -> int:
+        """Return the current column"""
+        return self._position["column"]
+
+    @property
     def finished(self) -> bool:
         """Returns whether we finished parsing all code, or there are more tokens to parse."""
-        # TODO: Replace this line with a working logic to check if we finished parsing all code.
-        return True
+        self._skip_whitespaces()
+        return self._content == ''
 
-class EndOfFileError(Exception):
-    def __init__(self):
-        super().__init__("End Of File")
 
 class TokenParseError(Exception):
     def __init__(self, description: str, line: int, column: int):
         super().__init__(f'Parse error at line {line}, column {column}: {description}')
 
 
-class InvalidNewLineError(TokenParseError):
+class EndOfFileError(TokenParseError):
     def __init__(self, position: Mapping[str, int]):
-        super().__init__(f'''The string after \" at {position['last_line']} , {position['last_column']},
-         contains new line at {position['line']}, {position['column']}''')
+        super().__init__("End Of File reached", position['line'], position['column'])
 
 
-class EndlessStringError(TokenParseError):
+class UnterminatedStringError(TokenParseError):
     def __init__(self, position: Mapping[str, int]):
-        super().__init__(f'''The string \" at {position['last_line']} , {position['last_column']} 
-        missing a closing quation''')
+        super().__init__('Unterminated string', position['last_line'], position['last_column'])
+
 
 class TokenTypeError(TokenParseError):
     def __init__(self, expected: str, got: str, position: Mapping[str, int]):
@@ -244,3 +205,8 @@ class TokenTypeError(TokenParseError):
 class TokenValueError(TokenParseError):
     def __init__(self, expected: str, got: str, position: Mapping[str, int]):
         super().__init__(f"Expected \"{expected}\" and got \"{got}\"", position['last_line'], position['last_column'])
+
+
+class UnexpectedCharacterError(TokenParseError):
+    def __init__(self, char: str, position: Mapping[str, int]):
+        super().__init__(f"Unxpected character: {repr(char)}", position['line'], position['column'])

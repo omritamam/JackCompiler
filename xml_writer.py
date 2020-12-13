@@ -4,11 +4,11 @@ from typing import TextIO
 
 def _encapsulate(string: str) -> str:
     return string \
-            .replace('&', '&amp') \
-            .replace('<', '&lt') \
-            .replace('>', '&gt') \
-            .replace("'", '&apos') \
-            .replace('"', '&quot')
+            .replace('&', '&amp;') \
+            .replace('<', '&lt;') \
+            .replace('>', '&gt;') \
+            .replace("'", '&apos;') \
+            .replace('"', '&quot;')
 
 
 class XmlWriter:
@@ -16,7 +16,7 @@ class XmlWriter:
     _hierarchy_stack: list
     _indentation: str
 
-    def __init__(self, file_obj, indentation='    '):
+    def __init__(self, file_obj, indentation=''):
         self._file_obj = file_obj
         self._hierarchy_stack = []
         self._indentation = indentation

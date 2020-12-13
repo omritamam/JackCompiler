@@ -3,6 +3,7 @@ import sys
 import os
 from typing import Sequence
 from xml_compiler import JackXmlCompiler
+from lexer import TokenParseError
 
 
 def files_from_path(path: str) -> Sequence[str]:
@@ -24,17 +25,22 @@ def files_from_path(path: str) -> Sequence[str]:
 
 def handle_file(input_path: str, output_path: str) -> None:
     """Compiles a given file using JackXmlCompiler"""
-    with open(input_path, 'r') as input_obj:
-        with open(output_path, 'w') as output_obj:
-            compiler = JackXmlCompiler(input_obj.read(), output_obj)
-            compiler.compile_tokens()
+    try:
+        with open(input_path, 'r') as input_obj:
+            with open(output_path, 'w') as output_obj:
+                compiler = JackXmlCompiler(input_obj.read(), output_obj)
+                compiler.compile_tokens()
+    except TokenParseError as err:
+        print(f'{input_path}:')
+        print(err)
 
 
 def main() -> int:
     """Main entrypoint of the module"""
     # Parse args
     parser = argparse.ArgumentParser(description="Jack language compiler.")
-    parser.add_argument('--analyze', action="store_true", help="Analyze the give file/files and dump their hierarchy to an XML file.")
+    parser.add_argument('--analyze', action="store_true",
+                        help="Analyze the give file/files and dump their hierarchy to an XML file.")
     parser.add_argument('path', help="A path to a jack file, or a directory with jack files.")
 
     args = parser.parse_args()
