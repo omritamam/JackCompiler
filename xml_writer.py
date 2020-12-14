@@ -16,7 +16,7 @@ class XmlWriter:
     _hierarchy_stack: list
     _indentation: str
 
-    def __init__(self, file_obj, indentation=''):
+    def __init__(self, file_obj, indentation='  '):
         self._file_obj = file_obj
         self._hierarchy_stack = []
         self._indentation = indentation
@@ -91,6 +91,6 @@ class _XmlElementContext:
         self._writer._start_element(self._type)
         return self
 
-    def __exit__(self, *exc) -> bool:
+    def __exit__(self, *exception) -> bool:
         self._writer._close_element()
         return False

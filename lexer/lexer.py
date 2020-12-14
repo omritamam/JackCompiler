@@ -24,7 +24,7 @@ class Lexer:
             'column': 0
         }
 
-    def _get_next_char_with_comments(self, peek: bool = False) -> str:
+    def _get_next_raw_char(self, peek: bool = False) -> str:
         """Returns the next unparsed char without skipping comments"""
         # Check if we read beyond the file limits
         if not self._content:
@@ -45,46 +45,60 @@ class Lexer:
         # Return read char
         return result
 
+    def _skip_whitespaces(self) -> None:
+        """Pops from queue all whitespaces characters"""
+        while self._content and self._get_next_raw_char(peek=True) in WHITESPACES_CHARS:
+            self._get_next_raw_char()
+
+    def _skip_comments(self, whitespaces: bool = False):
+        """Skip comments if there are any before the next parsed token"""
+        # Skip whitespaces if needed
+        if whitespaces:
+            self._skip_whitespaces()
+
+        while self._content.startswith('//') or self._content.startswith('/*'):
+            if self._content.startswith('//'):
+                # Next char starts a line comment
+                next_character = self._get_next_raw_char()
+                while next_character != '\n':
+                    next_character = self._get_next_raw_char()
+
+            else:
+                # Next char starts a multiline comment
+                next_character = self._get_next_raw_char()
+                while not (next_character == '*' and self._get_next_raw_char(peek=True) == '/'):
+                    next_character = self._get_next_raw_char()
+
+                # Next character is '/' (after we poped '*'), pop it
+                self._get_next_raw_char()
+
+            # Skip whitespaces if needed
+            if whitespaces:
+                self._skip_whitespaces()
+
+    def _skip(self, comments: bool = False, whitespaces: bool = False) -> None:
+        if comments:
+            self._skip_comments(whitespaces=whitespaces)
+        elif whitespaces:
+            self._skip_whitespaces()
+
+    def _push_back_character(self, char: str) -> None:
+        """Pushes back to content unparsed characters"""
+        # We don't allow to push characters that didn't begin in current line
+        assert(self._position['column'] >= len(char))
+
+        self._content = char + self._content
+        self._position['column'] -= len(char)
+
     def _get_next_char(self, peek: bool = False) -> str:
         """Returns the next unparsed char while skipping comments"""
-        # In case the caller asked for peek, backup self._content original state
-        if peek:
-            original_content = self._content
-            original_position = self._position.copy()
-
-        if self._content.startswith('//'):
-            # Next char starts a line comment
-            next_character = self._get_next_char_with_comments()
-            while next_character != '\n':
-                next_character = self._get_next_char_with_comments()
-
-            # Comment was ended, we can return next character.
-            # Since a new comment can begin right away, we will call self._get_next_char
-            # to handle the next character
-            result = self._get_next_char()
-
-        elif self._content.startswith('/*'):
-            # Next char starts a multiline comment
-            next_character = self._get_next_char_with_comments()
-            while not (next_character == '*' and self._get_next_char_with_comments(peek=True) == '/'):
-                next_character = self._get_next_char_with_comments()
-
-            # Next character is '/' (after we poped '*'), pop it
-            self._get_next_char_with_comments()
-
-            # Comment was ended, we can return next character.
-            # Since a new comment can begin right away, we will call self._get_next_char
-            # to handle the next character
-            result = self._get_next_char()
-
-        else:
-            # Next char is a regular character
-            result = self._get_next_char_with_comments()
+        # Make sure that next char doesn't begin a new comment
+        self._skip(comments=True)
+        result = self._get_next_raw_char()
 
         # We can't modify self._content if the caller asked for peek, restore it to its original state
         if peek:
-            self._content = original_content
-            self._position = original_position
+            self._push_back_character(result)
 
         return result
 
@@ -96,68 +110,63 @@ class Lexer:
             result += self._get_next_char()
         return result
 
-    def _skip_whitespaces(self) -> None:
-        """Pops from queue all whitespaces characters"""
-        self._get_next_sequence(WHITESPACES_CHARS)
-
     def next(self) -> Token:
         """Return the next maximum valid sequence that can be parsed as a token"""
+        if self._computed:
+            return self._computed.pop()
+
         # Update last position
         self._position['last_line'], self._position['last_column'] = self.line, self.column
 
-        # Skip whitespaces
-        self._skip_whitespaces()
+        # Skip whitespaces and comments to backup a relevant token position
+        self._skip(comments=True, whitespaces=True)
+        token_position = self.position
 
         # Determine which token type is being parsed
         next_char = self._get_next_char()
         if next_char in string.digits:
             # Next token is a integerConstant
             full_expression = next_char + self._get_next_sequence(string.digits)
-            return Token(full_expression, 'integerConstant')
+            return Token(full_expression, 'integerConstant', token_position)
 
         elif next_char in string.ascii_letters or next_char == '_':
             # Next token is an identifier or a keyword
             full_expression = next_char + self._get_next_sequence(IDENTIFIER_ALLOWED_CHARS)
             if full_expression in KEYWORDS:
-                return Token(full_expression, 'keyword')
+                return Token(full_expression, 'keyword', token_position)
             else:
-                return Token(full_expression, 'identifier')
+                return Token(full_expression, 'identifier', token_position)
 
         elif next_char == '"':
             # Next token is a stringConstant
             full_expression = ''
-            next_char = self._get_next_char()
+            next_char = self._get_next_raw_char()
             while next_char != '"':
                 if next_char == '\n':
                     raise UnterminatedStringError(self.position)
 
                 full_expression += next_char
-                next_char = self._get_next_char()
+                next_char = self._get_next_raw_char()
 
-            return Token(full_expression, 'stringConstant')
+            return Token(full_expression, 'stringConstant', token_position)
 
         elif next_char in SYMBOLS:
             # Next token is a symbol
-            return Token(next_char, 'symbol')
+            return Token(next_char, 'symbol', token_position)
 
         else:
             # next_char cannot start any valid token
-            raise UnexpectedCharacterError(next_char, self.position)
+            raise UnexpectedCharacterError(next_char, token_position)
 
-    def eat(self, value: str, token_type: str = None) -> None:
-        """
-        Pops the next parsed token and verify it matches to the give value and type.
-        If no token_type was given, only value match is checked.
-        """
-        next_token = self.next(token_type)
-
-        if not next_token.value == value:
-            raise TokenTypeError(value, next_token.value, self.position)
-
-    def peek(self) -> Token:
+    def peek(self, count: int = 1) -> Token:
         """Returns the next parsed token without fetching it from the token queue"""
-        next_token = self.next()
-        self._computed.insert(0, next_token)
+        return_queue = []
+        for i in range(count):
+            next_token = self.next()
+            return_queue.insert(0, next_token)
+
+        self._computed += return_queue
+
         return next_token
 
     @property
@@ -178,7 +187,7 @@ class Lexer:
     @property
     def finished(self) -> bool:
         """Returns whether we finished parsing all code, or there are more tokens to parse."""
-        self._skip_whitespaces()
+        self._skip(comments=True, whitespaces=True)
         return self._content == ''
 
 

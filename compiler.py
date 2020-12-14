@@ -28,8 +28,9 @@ def handle_file(input_path: str, output_path: str) -> None:
     try:
         with open(input_path, 'r') as input_obj:
             with open(output_path, 'w') as output_obj:
-                compiler = JackXmlCompiler(input_obj.read(), output_obj)
-                compiler.compile_tokens()
+                compiler = JackXmlCompiler(input_obj.read())
+                compiler.compile(output_obj)
+
     except TokenParseError as err:
         print(f'{input_path}:')
         print(err)
