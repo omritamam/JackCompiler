@@ -82,23 +82,22 @@ class Lexer:
         elif whitespaces:
             self._skip_whitespaces()
 
-    def _push_back_character(self, char: str) -> None:
-        """Pushes back to content unparsed characters"""
-        # We don't allow to push characters that didn't begin in current line
-        assert(self._position['column'] >= len(char))
-
-        self._content = char + self._content
-        self._position['column'] -= len(char)
-
     def _get_next_char(self, peek: bool = False) -> str:
         """Returns the next unparsed char while skipping comments"""
         # Make sure that next char doesn't begin a new comment
         self._skip(comments=True)
+        
+        # Backup position if peek was asked
+        backup_position = self.position
+
+        # Read next char
         result = self._get_next_raw_char()
 
         # We can't modify self._content if the caller asked for peek, restore it to its original state
         if peek:
-            self._push_back_character(result)
+            # Push back the character
+            self._position = backup_position
+            self._content = result + self._content
 
         return result
 

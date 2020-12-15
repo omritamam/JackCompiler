@@ -46,7 +46,7 @@ class JackXmlCompiler:
             while not lexer.finished:
                 output.write_token(lexer.next())
 
-    def compile(self, output_file: TextIO) -> None:
+    def analyze(self, output_file: TextIO) -> None:
         writer = XmlWriter(output_file)
         lexer = Lexer(self._content)
 

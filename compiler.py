@@ -23,13 +23,13 @@ def files_from_path(path: str) -> Sequence[str]:
         raise ValueError(f'Path "{str(path)}" is not a file or a directory')
 
 
-def handle_file(input_path: str, output_path: str) -> None:
+def analyze_file(input_path: str, output_path: str) -> None:
     """Compiles a given file using JackXmlCompiler"""
     try:
         with open(input_path, 'r') as input_obj:
             with open(output_path, 'w') as output_obj:
                 compiler = JackXmlCompiler(input_obj.read())
-                compiler.compile(output_obj)
+                compiler.analyze(output_obj)
 
     except TokenParseError as err:
         print(f'{input_path}:')
@@ -52,9 +52,10 @@ def main() -> int:
         print(f'Error: {str(err)}')
         return -1
 
-    for obj_path in files:
-        output_path = f'{os.path.splitext(obj_path)[0]}.xml'
-        handle_file(obj_path, output_path)
+    if args.analyze:
+        for obj_path in files:
+            output_path = f'{os.path.splitext(obj_path)[0]}.xml'
+            analyze_file(obj_path, output_path)
 
     return 0
 

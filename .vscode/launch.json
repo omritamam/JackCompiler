@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/compiler.py",
-            "args": ["--analyze", "${workspaceFolder}\\tests"],
+            "args": ["--analyze", "${workspaceFolder}\\tests\\Game1\\SubMarine.jack"],
             "console": "integratedTerminal"
         }
     ]
