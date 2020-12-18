@@ -1,2 +1,2 @@
-#!/bin/sh
-python3 compiler.py --analyze $*
+#!/bin/bash
+python3 ./compiler.py --analyze $*

@@ -1,0 +1,26 @@
+yossirozolyoo, omri.tamam
+===============================================================================
+Yossi Rosilio, ID 314843459, yossi.rosilio@mail.huji.ac.il
+Omri Tamam, ID 315564112, omri.tamam@mail.huji.ac.il
+===============================================================================
+
+                           Project 9 - Compilation
+                           -----------------------  
+
+Submitted Files
+---------------
+JackAnalyzer            Bash wrapper for compiler.py --analyze
+README                  This file.
+Makefile                Makefile for chmoding the compiler script.
+xml_writer.py           Implementation of an XML file generator.
+xml_compiler.py         Implementation of a compiler that generates XML hierarchy
+                        from a given Jack file.
+compiler.py             Front-end of the Jack compiler.
+lexer                   A Jack-lexical analysis package.
+lexer/__init__.py       lexer's __init__ file
+lexer/lexer.py          Contains Lexer class implementation and related errors.
+lexer/token.py          Contains Token class implementation.
+
+Remarks
+-------
+ * Nothing special
