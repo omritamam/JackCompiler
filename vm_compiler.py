@@ -131,7 +131,7 @@ class JackVmCompiler:
         if this is None:
             expressions = []
         else:
-            expressions = [this]
+            expressions = [VariableTerm(this)]
 
         self._eat('(')
 
@@ -145,7 +145,7 @@ class JackVmCompiler:
 
         return SubroutineCallTerm(f'{class_name}.{subroutine_name}', expressions)
 
-    def _parse_constant_term(self) -> Term:
+    def _parse_constant_term(self, subroutine: JackSubroutine) -> Term:
         term_token = self._next()
         if term_token.type == 'integerConstant':
             return IntegerConstant(int(term_token.value))
@@ -153,7 +153,10 @@ class JackVmCompiler:
             return StringConstant(term_token.value)
 
         assert(term_token.type == 'keyword')
-        if term_token.value not in ('true', 'false', 'null', 'this'):
+        if term_token.value == 'this':
+            return VariableTerm(subroutine['this'])
+
+        if term_token.value not in ('true', 'false', 'null'):
             raise TokenTypeError('term', term_token.value, term_token.position)
 
         return KeywordConstant(term_token.value)
@@ -176,7 +179,7 @@ class JackVmCompiler:
         #   subroutineCall|'(' expression ')'|unaryOp term
         term_token = self._lexer.peek()
         if term_token.type in ('integerConstant', 'stringConstant', 'keyword'):
-            return self._parse_constant_term()
+            return self._parse_constant_term(subroutine)
 
         elif term_token.type == 'identifier':
             # Can be one of the following:

@@ -1,0 +1,107 @@
+class Player {
+   field int x, y; // screen location of the players's top-left corner
+
+   constructor Player new() {
+      let x = 235;
+      let y = 215;
+      return this;
+   }
+
+   method Shot shoot(Shot shots) {
+      return Shot.new(x + 20, y - 6, shots);
+   }
+
+   /** Disposes this player. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method void clear() {
+      let x = 235;
+      let y = 215;
+      do draw();
+      return;
+   }
+
+   method int getX() {
+      return x;
+   }
+
+   method int getY() {
+      return y;
+   }
+
+   /** Draws the player on the screen. */
+   method void draw() {
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, y, x + 40, y + 10);
+      return;
+   }
+
+   /** Erases the player from the screen. */
+   method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y, x + 40, y + 10);
+      return;
+   }
+
+   method void moveUp() {
+      if (y > 133) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle(x, (y + 10) - 5, x + 40, y + 10);
+         let y = y - 6;
+         do Screen.setColor(true);
+         do Screen.drawRectangle(x, y, x + 40, y + 5);
+      }
+      return;
+   }
+
+   method void moveDown() {
+      if ((y + 10) < 220) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle(x, y, x + 40, y + 5);
+         let y = y + 6;
+         do Screen.setColor(true);
+         do Screen.drawRectangle(x, (y + 10) - 5, x + 40, y + 10);
+      }
+      return;
+   }
+
+   method void bomb(){
+      var int r;
+      var int maxR;
+
+      let maxR = Math.min(Math.min(180, (127 - Math.abs(128 - y))), 255 - Math.abs(256 - x));
+
+      do Screen.setColor(true);
+      while (r < maxR){
+         do Sys.wait(5);
+         do Screen.drawCircle(x, y, r);
+         let r = r + 1;
+      }
+      return;
+   }
+
+   method void moveLeft() {
+      if (x > 5) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle((x + 40) - 5, y, x + 40, y + 10);
+         let x = x - 6;
+         do Screen.setColor(true);
+         do Screen.drawRectangle(x, y, x + 5, y + 10);
+      }
+      return;
+   }
+
+   method void moveRight() {
+      if ((x + 40) < 505) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle(x, y, x + 5, y + 10);
+         let x = x + 6;
+         do Screen.setColor(true);
+         do Screen.drawRectangle((x + 40) - 5, y, x + 40, y + 10);
+      }
+      return;
+   }
+}

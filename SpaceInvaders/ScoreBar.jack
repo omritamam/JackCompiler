@@ -1,0 +1,117 @@
+class ScoreBar {
+    field int score, lives;
+    field int row, waveColumn, livesColumn, scoreColumn;
+    field String clearScoreString;
+
+    constructor ScoreBar new() {
+        let clearScoreString = "        ";
+        let row = 22;
+        let waveColumn = 31;
+        let livesColumn = 48;
+        let scoreColumn = 7;
+        return this;
+    }
+
+    method void dispose() {
+        do clearScoreString.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void initialDraw() {
+        do Screen.setColor(true);
+        do Screen.drawLine(0, 237, 511, 237);
+
+        do Output.moveCursor(row, scoreColumn - 7);
+        do Output.printString("Score: ");
+        do addScore(0);
+
+        do Output.moveCursor(row, waveColumn - 6);
+        do Output.printString("Wave: ");
+
+        do Output.moveCursor(row, livesColumn);
+        do Output.printString("Lives: ");
+
+        do drawHeart(480, 240);
+        do drawHeart(460, 240);
+        do drawHeart(440, 240);
+        return;
+    }
+
+    method void setWave(int wave) {
+        do Output.moveCursor(row, waveColumn);
+        do Output.printInt(wave);
+        return;
+    }
+
+    method void drawHeart(int i, int j){
+        do Screen.setColor(true);
+        do Screen.drawLine(i+2, j, i+5, j);
+        do Screen.drawLine(i+9, j, i+12, j);
+        do Screen.drawLine(i+1, j+1, i+6, j+1);
+        do Screen.drawLine(i+8, j+1, i+13, j+1);
+        do Screen.drawLine(i, j+2, i+14, j+2);
+        do Screen.drawLine(i, j+3, i+2, j+3);
+        do Screen.drawLine(i+4, j+3, i+14, j+3);
+        do Screen.drawLine(i, j+4, i+2, j+4);
+        do Screen.drawLine(i+5, j+4, i+14, j+4);
+        do Screen.drawLine(i, j+5, i+2, j+5);
+        do Screen.drawLine(i+4, j+5, i+14, j+5);
+        do Screen.drawLine(i, j+6, i+14, j+6);
+
+        do Screen.drawLine(i+1, j+7, i+13, j+7);
+        do Screen.drawLine(i+2, j+8, i+12, j+8);
+        do Screen.drawLine(i+3, j+9, i+11, j+9);
+        do Screen.drawLine(i+4, j+10, i+10, j+10);
+        do Screen.drawLine(i+5, j+11, i+9, j+11);
+        do Screen.drawLine(i+6, j+12, i+8, j+12);
+        do Screen.drawPixel(i+7, j+13);
+        return;
+    }
+
+    method void reduceLife() {
+        do Screen.setColor(false);
+
+        if (lives = 3) {
+            do Screen.drawRectangle(480, 240, 509, 255);
+        }
+        else {
+            if (lives = 2) {
+                do Screen.drawRectangle(460, 240, 490, 255);
+            }
+            else {
+                // Lives == 1
+                do Screen.drawRectangle(440, 240, 470, 255);
+            }
+        }
+
+        let lives = lives - 1;
+        do addScore(-20);
+
+        return;
+    }
+
+    method int getLives() {
+        return Math.max(lives, 0);
+    }
+
+    method int getScore() {
+        return score;
+    }
+
+    method void clear() {
+        let lives = 3;
+        let score = 100;
+        do initialDraw();
+        return;
+    }
+
+    method void addScore(int value) {
+        let score = score + value;
+
+        do Output.moveCursor(row, scoreColumn);
+        do Output.printInt(score);
+        do Output.printString(clearScoreString);
+        return;
+    }
+}

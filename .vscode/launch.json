@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/compiler.py",
-            "args": ["${workspaceFolder}\\tests\\Game1\\SubMarine.jack"],
+            "args": ["${workspaceFolder}\\SpaceInvaders"],
             "console": "integratedTerminal"
         }
     ]

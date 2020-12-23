@@ -1,9 +1,10 @@
 from .Expression import Expression, SubroutineCallTerm, VariableTerm
 from typing import Sequence, Union
+from itertools import chain
 
 
 class Statement:
-    def generate_vm_code(self):
+    def generate_vm_code(self) -> list[str]:
         raise NotImplementedError
 
 
@@ -25,8 +26,28 @@ class IfStatement(Statement):
         self._true_statements = true_statements
         self._false_statements = false_statements
 
-    def generate_vm_code(self, statement_indicator: str):
-        raise NotImplementedError
+    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+        # Create lists of generated statements
+        true_statements = list(chain(*[statement.generate_vm_code(f'{statement_indicator}.T{i}')
+                                       for i, statement in enumerate(self._true_statements)]))
+        if self._false_statements is None:
+            false_statements = list()
+        else:
+            false_statements = list(chain(*[statement.generate_vm_code(f'{statement_indicator}.F{i}')
+                                            for i, statement in enumerate(self._false_statements)]))
+
+        # Fill condition, false_statements, true_statements in the if-template
+        lines = [
+            *self._condition.generate_vm_code(),
+            f'if-goto IF_TRUE{statement_indicator}',
+            *false_statements,
+            f'goto IF_END{statement_indicator}',
+            f'label IF_TRUE{statement_indicator}',
+            *true_statements,
+            f'label IF_END{statement_indicator}'
+        ]
+
+        return lines
 
 
 class LetStatement(Statement):
@@ -41,6 +62,15 @@ class LetStatement(Statement):
         self._variable_term = variable_term
         self._value = value
 
+    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+        return [
+            # Push the evaluated expression to the stack
+            *self._value.generate_vm_code(),
+
+            # Pop it to that variable
+            *self._variable_term.generate_vm_set_code()
+        ]
+
 
 class WhileStatement(Statement):
     _condition: Expression
@@ -54,6 +84,24 @@ class WhileStatement(Statement):
         self._condition = condition
         self._statements = statements
 
+    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+        # Create lists of generated statements
+        statements = list(chain(*[statement.generate_vm_code(f'{statement_indicator}.{i}')
+                                  for i, statement in enumerate(self._statements)]))
+
+        # Fill condition and statements in the while-template
+        lines = [
+            f'label LOOP{statement_indicator}',
+            *self._condition.generate_vm_code(),
+            'not',
+            f'if-goto LOOP_END{statement_indicator}',
+            *statements,
+            f'goto LOOP{statement_indicator}',
+            f'label LOOP_END{statement_indicator}'
+        ]
+
+        return lines
+
 
 class DoStatement(Statement):
     _call_term: SubroutineCallTerm
@@ -64,6 +112,13 @@ class DoStatement(Statement):
     def __init__(self, call_term: SubroutineCallTerm):
         super().__init__()
         self._call_term = call_term
+
+    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+        # Evaluate the call term, and then dump its result
+        return [
+            *self._call_term.generate_vm_code(),
+            'pop temp 0'
+        ]
 
 
 class ReturnStatement(Statement):
@@ -78,3 +133,16 @@ class ReturnStatement(Statement):
     def __init__(self, expression: Expression):
         super().__init__()
         self._expression = expression
+
+    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+        # Push the return value and return
+        if self._expression is None:
+            return [
+                'push constant 0',
+                'return'
+            ]
+        else:
+            return [
+                *self._expression.generate_vm_code(),
+                'return'
+            ]

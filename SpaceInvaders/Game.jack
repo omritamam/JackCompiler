@@ -1,0 +1,334 @@
+class Game {
+    field Wave wave; // the wave of this game
+    field Player player;
+    field Shot shots;
+    field Array speeds;
+    field int wavesCount;
+    field int waveNumber;
+    field ScoreBar score;
+    field Highscores highscores;
+
+    /** Constructs a new Wave Game. */
+    constructor Game new() {
+        let highscores = Highscores.new(5);
+        let player = Player.new();
+        let score = ScoreBar.new();
+        let wavesCount = 5;
+        let speeds = Array.new(wavesCount);
+        let shots = null;
+
+        let speeds[0] = 10;
+        let speeds[1] = 8;
+        let speeds[2] = 6;
+        let speeds[3] = 5;
+        let speeds[4] = 3;
+
+        return this;
+    }
+
+    /** Disposes this game. */
+    method void dispose() {
+        if (~(shots = null)) {
+            do shots.dispose();
+        }
+        
+        if (~(wave = null)) {
+            do wave.dispose();
+        }
+
+        do player.dispose();
+        do score.dispose();
+        do highscores.dispose();
+        do speeds.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method boolean showIntro(){
+        var int i, j;
+        var char key;
+        var Array lines;
+        var String currentString;
+        var boolean skipRequested;
+
+        let skipRequested = false;
+
+        let lines=Array.new(12);
+        let i=0;
+
+        let currentString = "Welcome to Space Invaders!";
+        let lines[0] = currentString;
+
+        let currentString = "5 waves are OTW to you...";
+        let lines[1] = currentString;
+
+        let currentString = "# move by the arrows, shot with space.";
+        let lines[2] = currentString;
+
+        let currentString = "# a hit worth +1 point in the first wave";
+        let lines[3] = currentString;
+
+        let currentString = "  +2 for second, +3 for the third..";
+        let lines[4] = currentString;
+
+        let currentString = "# -20 points for each collision.";
+        let lines[5] = currentString;
+
+        let currentString = "# -1 point for each shot.";
+        let lines[6] = currentString;
+
+        let currentString = "# an easter egg hidden in the game, can you find it?";
+        let lines[7] = currentString;
+
+        let currentString = "";
+        let lines[8] = currentString;
+
+        let currentString = "Press q to quit, press s to start.";
+        let lines[9] = currentString;
+
+        // Print header
+        do Output.moveCursor(4, 18);
+        let currentString = lines[0];
+        while (i < currentString.length()){
+            if (~(Keyboard.keyPressed() = 0)) {
+                let skipRequested = true;
+            }
+
+            do Output.printChar(currentString.charAt(i));
+            if (~(skipRequested)) {
+                do Sys.wait(100);
+            }
+            let i=i+1;
+        }
+
+        do currentString.dispose();
+        let lines[0] = null;
+
+        // Wait a second
+        let i = 0;
+        while (i < 100) {
+            if (~(Keyboard.keyPressed() = 0)) {
+                let skipRequested = true;
+            }
+            
+            if (~(skipRequested)) {
+                do Sys.wait(10);
+            }
+
+            let i = i + 1;
+        }
+
+        // Draw logo
+        do drawAlien((510 / 2) - 15, 210);
+
+        // Wait another second
+        let i = 0;
+        while (i < 100) {
+            if (~(Keyboard.keyPressed() = 0)) {
+                let skipRequested = true;
+            }
+            
+            if (~(skipRequested)) {
+                do Sys.wait(10);
+            }
+
+            let i = i + 1;
+        }
+
+        // Print next lines
+        let j = 1;
+        while (j < 10) {
+            let currentString = lines[j];
+            do Output.moveCursor(7 + j, 3);
+            let i=0;
+            while (i < currentString.length()) {
+                if (~(Keyboard.keyPressed() = 0)) {
+                    let skipRequested = true;
+                }
+
+                do Output.printChar(currentString.charAt(i));
+
+                if (~(skipRequested)) {
+                    do Sys.wait(40);
+                }
+
+                let i = i + 1;
+            }
+
+            do currentString.dispose();
+            let lines[j] = null;
+            let j = j + 1;
+        }
+
+        do lines.dispose();
+        let lines = null;
+
+        // Wait for user to press any key
+        while (true) {
+            let key = Keyboard.keyPressed();
+            if ((key = 81) | (key = 113)) {         // key is Q or q
+                return false;
+            }
+
+            if ((key = 83) | (key = 115)) {        // key is S or s
+                return true;
+            }
+        }
+
+        // Unreachable code
+        return false;
+    }
+
+
+    method void drawAlien(int x, int y) {
+        // Line 1
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x + 8, y + 7, x + 9, y + 8);
+        do Screen.drawRectangle(x + 20, y + 7, x + 21, y + 8);
+        // Line 2
+        do Screen.drawRectangle(x + 10, y + 9, x + 11, y + 10);
+        do Screen.drawRectangle(x + 18, y + 9, x + 19, y + 10);
+        // Line 3
+        do Screen.drawRectangle(x + 8, y + 11, x + 21, y + 12);
+        // Line 4
+        do Screen.drawRectangle(x + 6, y + 13, x + 9, y + 14);
+        do Screen.drawRectangle(x + 12, y + 13, x + 17, y + 14);
+        do Screen.drawRectangle(x + 20, y + 13, x + 23, y + 14);
+        // Line 5
+        do Screen.drawRectangle(x + 4, y + 15, x + 25, y + 16);
+        // Line 6
+        do Screen.drawRectangle(x + 4, y + 17, x + 5, y + 18);
+        do Screen.drawRectangle(x + 8, y + 17, x + 21, y + 18);
+        do Screen.drawRectangle(x + 24, y + 17, x + 25, y + 18);
+        // Line 7
+        do Screen.drawRectangle(x + 4, y + 19, x + 5, y + 20);
+        do Screen.drawRectangle(x + 8, y + 19, x + 9, y + 20);
+        do Screen.drawRectangle(x + 20, y + 19, x + 21, y + 20);
+        do Screen.drawRectangle(x + 24, y + 19, x + 25, y + 20);
+        // Line 8
+        do Screen.drawRectangle(x + 10, y + 21, x + 13, y + 22);
+        do Screen.drawRectangle(x + 16, y + 21, x + 19, y + 22);
+
+        return;
+    }
+
+
+    /** Runs the game: handles the user's inputs and moves the wave accordingly */
+    method boolean run() {
+        var char key;  // the key currently pressed by the user
+        var boolean exit;
+        var Shot shot, nextShot;
+        var int livesLost;
+        var char lastKeyPressed;
+
+        if (~(shots = null)) {
+            do shots.dispose();
+            let shots = null;
+        }
+
+        do Screen.clearScreen();
+        do score.clear();
+        do player.clear();
+
+        if (~(wave = null)) {
+            do wave.dispose();
+        }
+        let waveNumber = 0;
+        let wave = Wave.new(speeds[waveNumber]);
+        do score.setWave(waveNumber + 1);
+
+        let lastKeyPressed = 0;
+        while (true) {
+            // Move shots
+            let shot = shots;
+            while (~(shot = null)) {
+                let nextShot = shot.getNext();
+
+                if (shot.move()) {
+                    if (shot = shots) {
+                        let shots = nextShot;
+                    }
+                    do shot.remove();
+                    do shot.dispose();
+                }
+                else {
+                    if (wave.hit(shot)) {
+                        do score.addScore(2 * (waveNumber + 1));
+
+                        if (shot = shots) {
+                            let shots = nextShot;
+                        }
+                        do shot.erase();
+                        do shot.remove();
+                        do shot.dispose();
+                    }
+                }
+
+                let shot = nextShot;
+            }
+
+            // Check if wave was defeated
+            if (wave.getCount() = 0) {
+                do wave.dispose();
+                let waveNumber = waveNumber + 1;
+                if (wavesCount > waveNumber) {
+                    let wave = Wave.new(speeds[waveNumber]);
+                }
+                else {
+                    let wave = Wave.new(1);       // Highest possible speed
+                }
+                do score.setWave(waveNumber + 1);
+            }
+
+            // Handle keyboard
+            let key = Keyboard.keyPressed();
+            if (key = 66) {                                       // What is this? IDK... interesting
+                do player.bomb();
+                do score.addScore(500);
+                do highscores.showHighscores(score.getScore());
+                return true;
+            }
+            if (key = 81)  { return false; }                      // q key
+            if (key = 131) { do player.moveUp(); }                // up arrow
+            if (key = 133) { do player.moveDown(); }              // down arrow
+            if (key = 130) { do player.moveLeft(); }              // left arrow
+            if (key = 132) { do player.moveRight(); }             // right arrow
+            if ((key = 32) & ~(lastKeyPressed = key))  {          // space key
+                let shots = player.shoot(shots);
+                do score.addScore(-1);
+            }
+
+            let lastKeyPressed = key;
+
+            // Since drawing all ships and moving them takes a lot of time,
+            // we need to adjust the waiting time in proportion to the amount
+            // of ships on field. The total runtime of the following to commands
+            // should remain pretty much the same in every iteration, regardless
+            // of the current wave and ship ammound.
+            do Sys.wait(30 - ((3 * wave.getCount()) / 2));
+            do wave.move();
+
+            // Check if we collided with a ship
+            let livesLost = wave.collision(player);
+            if (livesLost > 0) {
+                do player.draw();
+            }
+
+            while (livesLost > 0) {
+                let livesLost = livesLost - 1;
+                do score.reduceLife();
+            }
+
+            if (score.getLives() = 0) {
+                do highscores.showHighscores(score.getScore());
+                return true;
+            }
+        } // while
+
+        // Unreachable code
+        return true;
+    }
+}
+
+
+

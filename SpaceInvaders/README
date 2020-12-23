@@ -1,0 +1,108 @@
+yossirozolyoo, omri.tamam
+===============================================================================
+Yossi Rosilio, ID 314843459, yossi.rosilio@mail.huji.ac.il
+Omri Tamam, ID 315564112, omri.tamam@mail.huji.ac.il
+===============================================================================
+
+                           Project 9 - High level programming
+                           ----------------------------------
+  
+
+Submitted Files
+---------------
+README                  This file.
+Main.jack               The Main class implementation.
+Game.jack               The Game class implementation.
+Player.jack             The Player class implementation.
+Wave.jack               The Wave class implementation.
+Ship.jack               The Ship class implementation.
+Square.jack             The Square class implementation.
+Shot.jack               The Shot class implementation.
+Scorebar.jack           The Scorebar class implementation.
+Highscores.jack         The Highscores class implementation.
+
+
+Classes
+-------
+Main                    This class is responsible for initializing and
+                        running the game. It holds only the main function.
+
+Game                    This class is responsible for each step in running
+                        the game. It supports showing an intro frame,
+                        managing in-game dynamics and storing and viewing
+                        leaderboard. Notable methods:
+
+    showIntro           Draws an intro frame, and interacts with the user
+                        accordingly.
+    run                 Runs a single iteration of the game, until the game
+                        is over.
+
+Player                  This class is responsible for drawing and managing the
+                        player's actions. Notable methods:
+
+    shoot               Returns a new shot based on the players location.
+    clear               Redraws the player and clears its location information.
+    getX, getY          Returns the x/y coordinate of the top-left corner of the
+                        player.
+    draw                Draws the player on screen.
+    erase               Erases the player from screen.
+    moveUp, moveDown, moveLeft, moveRight
+                        Moves the player by 6 pixels.
+
+Wave                    This class is responsible for drawing and managing the
+                        waves formation. Notable methods:
+    
+    collision           Check if there was a collision of one of the ships with
+                        the player or the the boundaries.
+    getCount            Returns the number of active ships in the wave.
+    move                Moves the ships right/left and down.
+    hit                 Check if a ship was hit by a given shot.
+    draw                Draws the wave on screen
+    erase               Erases the wave from the screen
+
+Ship                    This class is a linked list of ships that can be drawn
+                        on screen. Notable methods:
+
+    remove              Removes the current ship from the list. dispose must be
+                        called afterward.
+    setNext             Sets the next item in the linked list.
+    setPrevious         Sets the previous item in the linked list.
+    getNext             Returns the next item in the linked list.
+    hit                 Called when the ship is hit. Calls remove and erase.
+    getX, getY          Returns the x/y coordinate of the top-left corner of the
+                        ship.
+    draw                Draws the ship on screen.
+    erase               Erases the ship from screen.
+    moveUp, moveDown, moveLeft, moveRight
+                        Moves the ship by 2 pixels.
+
+Square                  This class is responsible for drawing a 5x5 square.
+                        It is used by Ship for drawing itself.
+
+Shot                    This class is a linked list of shots that can be drawn
+                        on screen. Notable methods:
+
+    getX, getY          Returns the x/y coordinate of the top-left corner of the
+                        shot.
+    remove              Removes the current shot from the list. dispose must be
+                        called afterward.
+    setNext             Sets the next item in the linked list.
+    setPrevious         Sets the previous item in the linked list.
+    getNext             Returns the next item in the linked list.
+    draw                Draws the shot on screen.
+    erase               Erases the shot from screen.
+    move                Moves the shot 10 pixels up.
+
+Scorebar                Responsible for handling the score drawing.
+
+    initialDraw         Draws the score bar.
+    setWave             Sets the current wave number.
+    reduceLife          Called when a life is reduced.
+    getLives            Returns the number of lives left.
+    getScore            Returns the current score.
+    clear               Resets the stats and draws the scorebar.
+    addScore            Adds to the player's score.
+
+Remarks
+-------
+ * Have fun!

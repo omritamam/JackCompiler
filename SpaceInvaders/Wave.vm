@@ -1,0 +1,1074 @@
+function Wave.new 0
+push constant 7
+call Memory.alloc 1
+pop pointer 0
+push constant 40
+push constant 0
+push constant 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 44
+push this 0
+call Ship.getX 1
+add
+push constant 0
+push this 0
+call Ship.new 3
+pop this 0
+push constant 40
+push constant 30
+push constant 0
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 44
+push this 1
+call Ship.getX 1
+add
+push constant 30
+push this 1
+call Ship.new 3
+pop this 1
+push constant 1
+neg
+pop this 2
+push constant 0
+pop this 4
+push constant 0
+pop this 3
+push argument 0
+pop this 5
+push constant 20
+pop this 6
+push pointer 0
+call Wave.draw 1
+pop temp 0
+push pointer 0
+return
+function Wave.dispose 2
+push argument 0
+pop pointer 0
+push this 0
+pop local 0
+label LOOP1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1
+push local 0
+call Ship.getNext 1
+pop local 1
+push local 0
+call Ship.dispose 1
+pop temp 0
+push local 1
+pop local 0
+goto LOOP1
+label LOOP_END1
+push this 1
+pop local 0
+label LOOP3
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END3
+push local 0
+call Ship.getNext 1
+pop local 1
+push local 0
+call Ship.dispose 1
+pop temp 0
+push local 1
+pop local 0
+goto LOOP3
+label LOOP_END3
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Wave.collision 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 2
+push this 1
+push constant 0
+eq
+not
+if-goto IF_TRUE1
+goto IF_END1
+label IF_TRUE1
+push this 1
+call Ship.getY 1
+push constant 215
+gt
+if-goto IF_TRUE1.T0
+push this 1
+call Ship.getY 1
+push constant 10
+add
+push argument 1
+call Player.getY 1
+sub
+call Math.abs 1
+push constant 20
+lt
+if-goto IF_TRUE1.T0.F0
+goto IF_END1.T0.F0
+label IF_TRUE1.T0.F0
+push this 1
+pop local 0
+label LOOP1.T0.F0.T1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1.T0.F0.T1
+push local 0
+call Ship.getNext 1
+pop local 1
+push argument 1
+call Player.getX 1
+push constant 1
+sub
+push local 0
+call Ship.getX 1
+lt
+push argument 1
+call Player.getX 1
+push constant 40
+add
+push local 0
+call Ship.getX 1
+gt
+and
+push argument 1
+call Player.getX 1
+push constant 1
+sub
+push local 0
+call Ship.getX 1
+push constant 19
+add
+lt
+push argument 1
+call Player.getX 1
+push constant 40
+add
+push local 0
+call Ship.getX 1
+push constant 19
+add
+gt
+and
+or
+if-goto IF_TRUE1.T0.F0.T1.1
+goto IF_END1.T0.F0.T1.1
+label IF_TRUE1.T0.F0.T1.1
+push local 2
+push constant 1
+add
+pop local 2
+push local 0
+push this 1
+eq
+if-goto IF_TRUE1.T0.F0.T1.1.T1
+goto IF_END1.T0.F0.T1.1.T1
+label IF_TRUE1.T0.F0.T1.1.T1
+push local 1
+pop this 1
+label IF_END1.T0.F0.T1.1.T1
+push local 0
+call Ship.erase 1
+pop temp 0
+push local 0
+call Ship.remove 1
+pop temp 0
+push local 0
+call Ship.dispose 1
+pop temp 0
+push this 6
+push constant 1
+sub
+pop this 6
+label IF_END1.T0.F0.T1.1
+push local 1
+pop local 0
+goto LOOP1.T0.F0.T1
+label LOOP_END1.T0.F0.T1
+label IF_END1.T0.F0
+goto IF_END1.T0
+label IF_TRUE1.T0
+push this 1
+pop local 0
+label LOOP1.T0.T1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1.T0.T1
+push local 0
+call Ship.getNext 1
+pop local 1
+push local 2
+push constant 1
+add
+pop local 2
+push local 0
+call Ship.erase 1
+pop temp 0
+push local 0
+call Ship.remove 1
+pop temp 0
+push local 0
+call Ship.dispose 1
+pop temp 0
+push this 6
+push constant 1
+sub
+pop this 6
+push local 1
+pop local 0
+goto LOOP1.T0.T1
+label LOOP_END1.T0.T1
+push constant 0
+pop this 1
+label IF_END1.T0
+label IF_END1
+push this 0
+push constant 0
+eq
+not
+if-goto IF_TRUE2
+goto IF_END2
+label IF_TRUE2
+push this 0
+call Ship.getY 1
+push constant 215
+gt
+if-goto IF_TRUE2.T0
+push this 0
+call Ship.getY 1
+push constant 10
+add
+push argument 1
+call Player.getY 1
+sub
+call Math.abs 1
+push constant 20
+lt
+if-goto IF_TRUE2.T0.F0
+goto IF_END2.T0.F0
+label IF_TRUE2.T0.F0
+push this 0
+pop local 0
+label LOOP2.T0.F0.T1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END2.T0.F0.T1
+push local 0
+call Ship.getNext 1
+pop local 1
+push argument 1
+call Player.getX 1
+push constant 1
+sub
+push local 0
+call Ship.getX 1
+lt
+push argument 1
+call Player.getX 1
+push constant 40
+add
+push local 0
+call Ship.getX 1
+gt
+and
+push argument 1
+call Player.getX 1
+push constant 1
+sub
+push local 0
+call Ship.getX 1
+push constant 19
+add
+lt
+push argument 1
+call Player.getX 1
+push constant 40
+add
+push local 0
+call Ship.getX 1
+push constant 19
+add
+gt
+and
+or
+if-goto IF_TRUE2.T0.F0.T1.1
+goto IF_END2.T0.F0.T1.1
+label IF_TRUE2.T0.F0.T1.1
+push local 2
+push constant 1
+add
+pop local 2
+push local 0
+push this 0
+eq
+if-goto IF_TRUE2.T0.F0.T1.1.T1
+goto IF_END2.T0.F0.T1.1.T1
+label IF_TRUE2.T0.F0.T1.1.T1
+push local 1
+pop this 0
+label IF_END2.T0.F0.T1.1.T1
+push local 0
+call Ship.erase 1
+pop temp 0
+push local 0
+call Ship.remove 1
+pop temp 0
+push local 0
+call Ship.dispose 1
+pop temp 0
+push this 6
+push constant 1
+sub
+pop this 6
+label IF_END2.T0.F0.T1.1
+push local 1
+pop local 0
+goto LOOP2.T0.F0.T1
+label LOOP_END2.T0.F0.T1
+label IF_END2.T0.F0
+goto IF_END2.T0
+label IF_TRUE2.T0
+push this 0
+pop local 0
+label LOOP2.T0.T1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END2.T0.T1
+push local 0
+call Ship.getNext 1
+pop local 1
+push local 2
+push constant 1
+add
+pop local 2
+push local 0
+call Ship.erase 1
+pop temp 0
+push local 0
+call Ship.remove 1
+pop temp 0
+push local 0
+call Ship.dispose 1
+pop temp 0
+push this 6
+push constant 1
+sub
+pop this 6
+push local 1
+pop local 0
+goto LOOP2.T0.T1
+label LOOP_END2.T0.T1
+push constant 0
+pop this 0
+label IF_END2.T0
+label IF_END2
+push local 2
+return
+function Wave.getCount 0
+push argument 0
+pop pointer 0
+push this 6
+return
+function Wave.move 0
+push argument 0
+pop pointer 0
+push this 2
+if-goto IF_TRUE0
+push pointer 0
+call Wave.moveLeft 1
+pop temp 0
+goto IF_END0
+label IF_TRUE0
+push pointer 0
+call Wave.moveRight 1
+pop temp 0
+label IF_END0
+push this 4
+push constant 1
+add
+pop this 4
+push this 4
+push constant 10
+eq
+if-goto IF_TRUE2
+goto IF_END2
+label IF_TRUE2
+push this 2
+not
+pop this 2
+push constant 0
+pop this 4
+label IF_END2
+push this 3
+push constant 1
+add
+pop this 3
+push this 3
+push this 5
+eq
+if-goto IF_TRUE4
+goto IF_END4
+label IF_TRUE4
+push pointer 0
+call Wave.moveDown 1
+pop temp 0
+push constant 0
+pop this 3
+label IF_END4
+push constant 0
+return
+function Wave.hit 2
+push argument 0
+pop pointer 0
+push this 0
+push constant 0
+eq
+not
+if-goto IF_TRUE0
+push this 1
+push constant 0
+eq
+not
+if-goto IF_TRUE0.F0
+push constant 0
+return
+goto IF_END0.F0
+label IF_TRUE0.F0
+push this 1
+call Ship.getX 1
+push constant 44
+add
+push argument 1
+call Shot.getX 1
+sub
+pop local 0
+label IF_END0.F0
+goto IF_END0
+label IF_TRUE0
+push this 1
+push constant 0
+eq
+not
+if-goto IF_TRUE0.T0
+push this 0
+call Ship.getX 1
+push constant 44
+add
+push argument 1
+call Shot.getX 1
+sub
+pop local 0
+goto IF_END0.T0
+label IF_TRUE0.T0
+push this 0
+call Ship.getX 1
+push this 1
+call Ship.getX 1
+call Math.max 2
+push constant 44
+add
+push argument 1
+call Shot.getX 1
+sub
+pop local 0
+label IF_END0.T0
+label IF_END0
+push local 0
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_END1
+label IF_TRUE1
+push constant 0
+return
+label IF_END1
+push local 0
+push constant 44
+push local 0
+push constant 44
+call Math.divide 2
+call Math.multiply 2
+sub
+pop local 0
+push local 0
+push constant 44
+push constant 19
+sub
+lt
+if-goto IF_TRUE3
+goto IF_END3
+label IF_TRUE3
+push constant 0
+return
+label IF_END3
+push this 0
+push constant 0
+eq
+not
+if-goto IF_TRUE4
+goto IF_END4
+label IF_TRUE4
+push argument 1
+call Shot.getY 1
+push this 0
+call Ship.getY 1
+push constant 10
+add
+sub
+call Math.abs 1
+push constant 11
+lt
+if-goto IF_TRUE4.T0
+goto IF_END4.T0
+label IF_TRUE4.T0
+push argument 1
+call Shot.getX 1
+push constant 44
+sub
+push this 0
+call Ship.getX 1
+gt
+if-goto IF_TRUE4.T0.T0
+goto IF_END4.T0.T0
+label IF_TRUE4.T0.T0
+push constant 0
+return
+label IF_END4.T0.T0
+push this 0
+pop local 1
+label LOOP4.T0.T2
+push local 1
+push constant 0
+eq
+not
+not
+if-goto LOOP_END4.T0.T2
+push local 1
+call Ship.getX 1
+push constant 1
+sub
+push argument 1
+call Shot.getX 1
+lt
+push local 1
+call Ship.getX 1
+push constant 20
+add
+push argument 1
+call Shot.getX 1
+gt
+and
+if-goto IF_TRUE4.T0.T2.0
+goto IF_END4.T0.T2.0
+label IF_TRUE4.T0.T2.0
+push local 1
+push this 0
+eq
+if-goto IF_TRUE4.T0.T2.0.T0
+goto IF_END4.T0.T2.0.T0
+label IF_TRUE4.T0.T2.0.T0
+push local 1
+call Ship.getNext 1
+pop this 0
+label IF_END4.T0.T2.0.T0
+push local 1
+call Ship.hit 1
+pop temp 0
+push local 1
+call Ship.dispose 1
+pop temp 0
+push this 6
+push constant 1
+sub
+pop this 6
+push constant 1
+neg
+return
+label IF_END4.T0.T2.0
+push local 1
+call Ship.getNext 1
+pop local 1
+goto LOOP4.T0.T2
+label LOOP_END4.T0.T2
+label IF_END4.T0
+label IF_END4
+push this 1
+push constant 0
+eq
+not
+if-goto IF_TRUE5
+goto IF_END5
+label IF_TRUE5
+push argument 1
+call Shot.getY 1
+push this 1
+call Ship.getY 1
+push constant 10
+add
+sub
+call Math.abs 1
+push constant 11
+lt
+if-goto IF_TRUE5.T0
+goto IF_END5.T0
+label IF_TRUE5.T0
+push argument 1
+call Shot.getX 1
+push constant 44
+sub
+push this 1
+call Ship.getX 1
+gt
+if-goto IF_TRUE5.T0.T0
+goto IF_END5.T0.T0
+label IF_TRUE5.T0.T0
+push constant 0
+return
+label IF_END5.T0.T0
+push this 1
+pop local 1
+label LOOP5.T0.T2
+push local 1
+push constant 0
+eq
+not
+not
+if-goto LOOP_END5.T0.T2
+push local 1
+call Ship.getX 1
+push constant 1
+sub
+push argument 1
+call Shot.getX 1
+lt
+push local 1
+call Ship.getX 1
+push constant 20
+add
+push argument 1
+call Shot.getX 1
+gt
+and
+if-goto IF_TRUE5.T0.T2.0
+goto IF_END5.T0.T2.0
+label IF_TRUE5.T0.T2.0
+push local 1
+push this 1
+eq
+if-goto IF_TRUE5.T0.T2.0.T0
+goto IF_END5.T0.T2.0.T0
+label IF_TRUE5.T0.T2.0.T0
+push local 1
+call Ship.getNext 1
+pop this 1
+label IF_END5.T0.T2.0.T0
+push local 1
+call Ship.hit 1
+pop temp 0
+push local 1
+call Ship.dispose 1
+pop temp 0
+push this 6
+push constant 1
+sub
+pop this 6
+push constant 1
+neg
+return
+label IF_END5.T0.T2.0
+push local 1
+call Ship.getNext 1
+pop local 1
+goto LOOP5.T0.T2
+label LOOP_END5.T0.T2
+label IF_END5.T0
+label IF_END5
+push constant 0
+return
+function Wave.draw 1
+push argument 0
+pop pointer 0
+push this 0
+pop local 0
+label LOOP1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1
+push local 0
+call Ship.draw 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP1
+label LOOP_END1
+push this 1
+pop local 0
+label LOOP3
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END3
+push local 0
+call Ship.draw 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP3
+label LOOP_END3
+push constant 0
+return
+function Wave.erase 1
+push argument 0
+pop pointer 0
+push this 0
+pop local 0
+label LOOP1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1
+push local 0
+call Ship.erase 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP1
+label LOOP_END1
+push this 1
+pop local 0
+label LOOP3
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END3
+push local 0
+call Ship.erase 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP3
+label LOOP_END3
+push constant 0
+return
+function Wave.moveUp 1
+push argument 0
+pop pointer 0
+push this 0
+pop local 0
+label LOOP1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1
+push local 0
+call Ship.moveUp 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP1
+label LOOP_END1
+push this 1
+pop local 0
+label LOOP3
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END3
+push local 0
+call Ship.moveUp 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP3
+label LOOP_END3
+push constant 0
+return
+function Wave.moveDown 1
+push argument 0
+pop pointer 0
+push this 0
+pop local 0
+label LOOP1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1
+push local 0
+call Ship.moveDown 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP1
+label LOOP_END1
+push this 1
+pop local 0
+label LOOP3
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END3
+push local 0
+call Ship.moveDown 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP3
+label LOOP_END3
+push constant 0
+return
+function Wave.moveLeft 1
+push argument 0
+pop pointer 0
+push this 0
+pop local 0
+label LOOP1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1
+push local 0
+call Ship.moveLeft 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP1
+label LOOP_END1
+push this 1
+pop local 0
+label LOOP3
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END3
+push local 0
+call Ship.moveLeft 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP3
+label LOOP_END3
+push constant 0
+return
+function Wave.moveRight 1
+push argument 0
+pop pointer 0
+push this 0
+pop local 0
+label LOOP1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END1
+push local 0
+call Ship.moveRight 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP1
+label LOOP_END1
+push this 1
+pop local 0
+label LOOP3
+push local 0
+push constant 0
+eq
+not
+not
+if-goto LOOP_END3
+push local 0
+call Ship.moveRight 1
+pop temp 0
+push local 0
+call Ship.getNext 1
+pop local 0
+goto LOOP3
+label LOOP_END3
+push constant 0
+return

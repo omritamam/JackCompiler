@@ -1,0 +1,383 @@
+/** Implements a graphical ship. */
+class Wave {
+    field Ship rowA, rowB;
+    field boolean direction;    // the wave's current direction: 
+                                // true for right and false for left
+    field int downCount;
+    field int movementCount;
+    field int speed;
+    field int shipCount;
+
+    /** Constructs a new ship with a given location. */
+    constructor Wave new(int Aspeed) {
+        let rowA = Ship.new(40, 0, null);                    // 1
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 2
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 3
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 4
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 5
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 6
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 7
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 8
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 9
+        let rowA = Ship.new(44 + rowA.getX(), 0, rowA);      // 10
+
+        let rowB = Ship.new(40, 30, null);                   // 11
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 12
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 13
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 14
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 15
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 16
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 17
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 18
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 19
+        let rowB = Ship.new(44 + rowB.getX(), 30, rowB);     // 20
+
+        let direction = true;  // Right
+        let movementCount = 0;
+        let downCount = 0;
+        let speed = Aspeed;
+        let shipCount = 20;
+        do draw();
+        return this;
+    }
+
+    /** Disposes this ship. */
+    method void dispose() {
+        var Ship ship, nextShip;
+        let ship = rowA;
+        while (~(ship = null)) {
+            let nextShip = ship.getNext();
+            do ship.dispose();
+            let ship = nextShip;
+        }
+
+        let ship = rowB;
+        while (~(ship = null)) {
+            let nextShip = ship.getNext();
+            do ship.dispose();
+            let ship = nextShip;
+        }
+
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int collision(Player player) {
+        var Ship ship, nextShip;
+        var int livesLost;
+
+        let livesLost = 0;
+
+        // Step 1: check collision with player
+        if (~(rowB = null)) {
+            if (rowB.getY() > 215) {
+                let ship = rowB;
+                while (~(ship = null)) {
+                    let nextShip = ship.getNext();
+
+                    let livesLost = livesLost + 1;
+                    do ship.erase();
+                    do ship.remove();
+                    do ship.dispose();
+                    let shipCount = shipCount - 1;
+
+                    let ship = nextShip;
+                }
+
+                let rowB = null;
+            }
+            else {
+                if (Math.abs(rowB.getY() + 10 - player.getY()) < 20) {
+                    // Player is in rowB
+                    let ship = rowB;
+                    while (~(ship = null)) {
+                        let nextShip = ship.getNext();
+
+                        if ((((player.getX() - 1) < ship.getX()) & ((player.getX() + 40) > ship.getX())) |
+                            (((player.getX() - 1) < (ship.getX() + 19)) & ((player.getX() + 40) > (ship.getX()  + 19)))) {
+                            // One of the sides of the ship is in the players boundaries
+                            let livesLost = livesLost + 1;
+
+                            if (ship = rowB) {
+                                let rowB = nextShip;
+                            }
+
+                            do ship.erase();
+                            do ship.remove();
+                            do ship.dispose();
+                            let shipCount = shipCount - 1;
+                        }
+
+                        let ship = nextShip;
+                    }
+                }
+            }
+        }
+
+        if (~(rowA = null)) {
+            if (rowA.getY() > 215) {
+                let ship = rowA;
+                while (~(ship = null)) {
+                    let nextShip = ship.getNext();
+
+                    let livesLost = livesLost + 1;
+                    do ship.erase();
+                    do ship.remove();
+                    do ship.dispose();
+                    let shipCount = shipCount - 1;
+
+                    let ship = nextShip;
+                }
+
+                let rowA = null;
+            }
+            else {
+                if (Math.abs(rowA.getY() + 10 - player.getY()) < 20) {
+                    // Player is in rowA
+                    let ship = rowA;
+                    while (~(ship = null)) {
+                        let nextShip = ship.getNext();
+
+                        if ((((player.getX() - 1) < ship.getX()) & ((player.getX() + 40) > ship.getX())) |
+                            (((player.getX() - 1) < (ship.getX() + 19)) & ((player.getX() + 40) > (ship.getX()  + 19)))) {
+                            // One of the sides of the ship is in the players boundaries
+                            let livesLost = livesLost + 1;
+
+                            if (ship = rowA) {
+                                let rowA = nextShip;
+                            }
+
+                            do ship.erase();
+                            do ship.remove();
+                            do ship.dispose();
+                            let shipCount = shipCount - 1;
+                        }
+
+                        let ship = nextShip;
+                    }
+                }
+            }
+        }
+
+        return livesLost;
+    }
+
+    method int getCount() {
+        return shipCount;
+    }
+
+    method void move() {
+        if (direction) {
+            do moveRight();
+        } else {
+            do moveLeft();
+        }
+
+        let movementCount = movementCount + 1;
+        if (movementCount = 10) {
+            let direction = ~direction;
+            let movementCount = 0;
+        }
+
+        let downCount = downCount + 1;
+        if (downCount = speed) {
+            do moveDown();
+            let downCount = 0;
+        }
+
+        return;
+    }
+
+    method boolean hit(Shot shot) {
+        var int xOffset;
+        var Ship currentShip;
+
+        // Check if shot is in the way of a ship
+        if (~(rowA = null)) {
+            if (~(rowB = null)) {
+                let xOffset = (Math.max(rowA.getX(), rowB.getX()) + 44) - shot.getX();
+            }
+            else {
+                let xOffset = (rowA.getX() + 44) - shot.getX();
+            }
+        }
+        else {
+            if (~(rowB = null)) {
+                let xOffset = (rowB.getX() + 44) - shot.getX();
+            }
+            else {
+                return false;
+            }
+        }
+
+        if (xOffset < 0) {
+            return false;
+        }
+
+        // Set xOffset to be the remainder from division by 44
+        let xOffset = xOffset - Math.multiply(44, Math.divide(xOffset, 44));
+        if (xOffset < (44 - 19)) {
+            return false;
+        }
+
+        // Check if it hits the ship
+        if (~(rowA = null)) {
+            if (Math.abs(shot.getY() - (rowA.getY() + 10)) < 11) {
+                // Shot is in rowA
+                if ((shot.getX() - 44) > rowA.getX()) {
+                    return false;
+                }
+
+                let currentShip = rowA;
+                while (~(currentShip = null)) {
+                    if (((currentShip.getX() - 1) < shot.getX()) & ((currentShip.getX() + 20) > shot.getX())) {
+                        if (currentShip = rowA) {
+                            let rowA = currentShip.getNext();
+                        }
+
+                        do currentShip.hit();
+                        do currentShip.dispose();
+                        let shipCount = shipCount - 1;
+                        return true;                    
+                    }
+
+                    let currentShip = currentShip.getNext();
+                }
+            }
+        }
+        if (~(rowB = null)) {
+            if (Math.abs(shot.getY() - (rowB.getY() + 10)) < 11) {
+                // Shot is in second row
+                if ((shot.getX() - 44) > rowB.getX()) {
+                    return false;
+                }
+
+                let currentShip = rowB;
+                while (~(currentShip = null)) {
+                    if (((currentShip.getX() - 1) < shot.getX()) & ((currentShip.getX() + 20) > shot.getX())) {
+                        if (currentShip = rowB) {
+                            let rowB = currentShip.getNext();
+                        }
+
+                        do currentShip.hit();
+                        do currentShip.dispose();
+                        let shipCount = shipCount - 1;
+                        return true;
+                    }
+
+                    let currentShip = currentShip.getNext();
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /** Draws the wave on the screen. */
+    method void draw() {
+        var Ship ship;
+        let ship = rowA;
+        while (~(ship = null)) {
+            do ship.draw();
+            let ship = ship.getNext();
+        }
+        
+        let ship = rowB;
+        while (~(ship = null)) {
+            do ship.draw();
+            let ship = ship.getNext();
+        }
+
+        return;
+    }
+
+    /** Erases the wave from the screen. */
+    method void erase() {
+        var Ship ship;
+        let ship = rowA;
+        while (~(ship = null)) {
+            do ship.erase();
+            let ship = ship.getNext();
+        }
+        
+        let ship = rowB;
+        while (~(ship = null)) {
+            do ship.erase();
+            let ship = ship.getNext();
+        }
+
+        return;
+}
+
+    /** Moves the wave up by 2 pixels. */
+    method void moveUp() {
+        var Ship ship;
+        let ship = rowA;
+        while (~(ship = null)) {
+            do ship.moveUp();
+            let ship = ship.getNext();
+        }
+        
+        let ship = rowB;
+        while (~(ship = null)) {
+            do ship.moveUp();
+            let ship = ship.getNext();
+        }
+
+        return;
+    }
+
+    /** Moves the wave down by 2 pixels. */
+    method void moveDown() {
+        var Ship ship;
+        let ship = rowA;
+        while (~(ship = null)) {
+            do ship.moveDown();
+            let ship = ship.getNext();
+        }
+        
+        let ship = rowB;
+        while (~(ship = null)) {
+            do ship.moveDown();
+            let ship = ship.getNext();
+        }
+
+        return;
+    }
+
+    /** Moves the wave left by 2 pixels. */
+    method void moveLeft() {
+        var Ship ship;
+        let ship = rowA;
+        while (~(ship = null)) {
+            do ship.moveLeft();
+            let ship = ship.getNext();
+        }
+        
+        let ship = rowB;
+        while (~(ship = null)) {
+            do ship.moveLeft();
+            let ship = ship.getNext();
+        }
+
+        return;
+    }
+
+    /** Moves the wave right by 2 pixels. */
+    method void moveRight() {
+        var Ship ship;
+        let ship = rowA;
+        while (~(ship = null)) {
+            do ship.moveRight();
+            let ship = ship.getNext();
+        }
+        
+        let ship = rowB;
+        while (~(ship = null)) {
+            do ship.moveRight();
+            let ship = ship.getNext();
+        }
+
+        return;
+    }
+}

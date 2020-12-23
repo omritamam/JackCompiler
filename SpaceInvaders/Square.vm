@@ -1,0 +1,230 @@
+function Square.new 0
+push constant 2
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push pointer 0
+call Square.draw 1
+pop temp 0
+push pointer 0
+return
+function Square.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Square.getX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Square.getY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Square.draw 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push constant 5
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Square.canMoveUp 0
+push argument 0
+pop pointer 0
+push this 1
+push constant 1
+gt
+return
+function Square.canMoveDown 0
+push argument 0
+pop pointer 0
+push this 1
+push constant 5
+add
+push constant 254
+lt
+return
+function Square.canMoveLeft 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 1
+gt
+return
+function Square.canMoveRight 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 5
+add
+push constant 510
+lt
+return
+function Square.moveUpA 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push constant 5
+add
+push constant 1
+sub
+push this 0
+push constant 5
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 1
+push constant 2
+sub
+pop this 1
+push constant 0
+return
+function Square.moveUpB 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push constant 5
+add
+push this 1
+push constant 1
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Square.moveDownA 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push constant 5
+add
+push this 1
+push constant 1
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 1
+push constant 2
+add
+pop this 1
+push constant 0
+return
+function Square.moveDownB 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push constant 5
+add
+push constant 1
+sub
+push this 0
+push constant 5
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Square.moveLeftA 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 5
+add
+push constant 1
+sub
+push this 1
+push this 0
+push constant 5
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 2
+sub
+pop this 0
+push constant 0
+return
+function Square.moveLeftB 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push constant 1
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Square.moveRightA 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push constant 1
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 2
+add
+pop this 0
+push constant 0
+return
+function Square.moveRightB 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 5
+add
+push constant 1
+sub
+push this 1
+push this 0
+push constant 5
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return

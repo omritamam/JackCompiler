@@ -1,0 +1,176 @@
+/** Implements a graphical ship. */
+class Ship {
+    field Square s1, s2, s3, s4, s5; // screen location of the ship's top-left corner
+    field Ship previous, next;
+
+    /** Constructs a new ship with a given location. */
+    constructor Ship new(int x, int y, Ship Anext) {
+        let s1 = Square.new(x, y);
+        let s2 = Square.new(x+7, y);
+        let s3 = Square.new(x, y+7);
+        let s4 = Square.new(x+7, y+7);
+        let s5 = Square.new(x+3, y+14);
+        let next = Anext;
+        let previous = null;
+        if (~(next = null)) {
+            do next.setPrevious(this);
+        }
+        do draw();
+        return this;
+    }
+
+    /** Disposes this ship. */
+    method void dispose() {
+        do s1.dispose();
+        do s2.dispose();
+        do s3.dispose();
+        do s4.dispose();
+        do s5.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void remove() {
+        if (~(previous = null))
+        {
+            do previous.setNext(next);
+        }
+
+        if (~(next = null))
+        {
+            do next.setPrevious(previous);
+        }
+
+        return;
+    }
+
+    method void setNext(Ship Avalue) {
+        let next = Avalue;
+        return;
+    }
+
+    method void setPrevious(Ship Avalue) {
+        let previous = Avalue;
+        return;
+    }
+
+    method Ship getNext() {
+        return next;
+    }
+
+    method void hit() {
+        do erase();
+        do remove();
+        return;
+    }
+
+    method int getX() {
+        return s1.getX();
+    }
+
+    method int getY() {
+        return s1.getY();
+    }
+
+    /** Draws the ship on the screen. */
+    method void draw() {
+        do Screen.setColor(true);
+        do s1.draw();
+        do s2.draw();
+        do s3.draw();
+        do s4.draw();
+        do s5.draw();
+        return;
+    }
+
+    /** Erases the ship from the screen. */
+    method void erase() {
+        do Screen.setColor(false);
+        do s1.draw();
+        do s2.draw();
+        do s3.draw();
+        do s4.draw();
+        do s5.draw();
+        return;
+    }
+
+    /** Moves the ship up by 2 pixels. */
+    method void moveUp() {
+        if (s1.canMoveUp()) {
+            do Screen.setColor(false);
+            do s1.moveUpA();
+            do s2.moveUpA();
+            do s3.moveUpA();
+            do s4.moveUpA();
+            do s5.moveUpA();
+
+            do Screen.setColor(true);
+            do s1.moveUpB();
+            do s2.moveUpB();
+            do s3.moveUpB();
+            do s4.moveUpB();
+            do s5.moveUpB();
+        }
+        return;
+    }
+
+    /** Moves the ship down by 2 pixels. */
+    method void moveDown() {
+        if (s5.canMoveDown()) {
+            do Screen.setColor(false);
+            do s1.moveDownA();
+            do s2.moveDownA();
+            do s3.moveDownA();
+            do s4.moveDownA();
+            do s5.moveDownA();
+
+            do Screen.setColor(true);
+            do s1.moveDownB();
+            do s2.moveDownB();
+            do s3.moveDownB();
+            do s4.moveDownB();
+            do s5.moveDownB();
+        }
+        return;
+    }
+
+    /** Moves the ship left by 2 pixels. */
+    method void moveLeft() {
+        if (s1.canMoveLeft()) {
+            do Screen.setColor(false);
+            do s1.moveLeftA();
+            do s2.moveLeftA();
+            do s3.moveLeftA();
+            do s4.moveLeftA();
+            do s5.moveLeftA();
+
+            do Screen.setColor(true);
+            do s1.moveLeftB();
+            do s2.moveLeftB();
+            do s3.moveLeftB();
+            do s4.moveLeftB();
+            do s5.moveLeftB();
+        }
+        return;
+    }
+
+    /** Moves the ship right by 2 pixels. */
+    method void moveRight() {
+        if (s4.canMoveRight()) {
+            do Screen.setColor(false);
+            do s1.moveRightA();
+            do s2.moveRightA();
+            do s3.moveRightA();
+            do s4.moveRightA();
+            do s5.moveRightA();
+
+            do Screen.setColor(true);
+            do s1.moveRightB();
+            do s2.moveRightB();
+            do s3.moveRightB();
+            do s4.moveRightB();
+            do s5.moveRightB();
+        }
+        return;
+    }
+}

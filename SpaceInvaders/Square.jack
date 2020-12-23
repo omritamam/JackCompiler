@@ -1,0 +1,108 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/09/Square/Square.jack
+
+/** Implements a graphical square. */
+class Square {
+
+   field int x, y; // screen location of the square's top-left corner
+
+   /** Constructs a new 5x5 pixels square with a given location. */
+   constructor Square new(int Ax, int Ay) {
+      let x = Ax;
+      let y = Ay;
+      do draw();
+      return this;
+   }
+
+   /** Disposes this square. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method int getX() {
+      return x;
+   }
+
+   method int getY() {
+      return y;
+   }
+
+
+   /** Draws the square on the screen. Call Screen.setColor before calling draw. */
+   method void draw() {
+      do Screen.drawRectangle(x, y, x + 5, y + 5);
+      return;
+   }
+
+   /** Check if the square can move up. */
+   method boolean canMoveUp() {
+      return y > 1;
+   }
+
+   method boolean canMoveDown() {
+      return (y + 5) < 254;
+   }
+
+   method boolean canMoveLeft() {
+      return x > 1;
+   }
+
+   method boolean canMoveRight() {
+      return (x + 5) < 510;
+   }
+
+   /** Moves the square up by 2 pixels. The part erases the needed part, call setColor before. */
+   method void moveUpA() {
+      do Screen.drawRectangle(x, (y + 5) - 1, x + 5, y + 5);
+      let y = y - 2;
+      return;
+   }
+
+   /** Moves the square up by 2 pixels. The part draws the needed part, call setColor before. */
+   method void moveUpB() {
+      do Screen.drawRectangle(x, y, x + 5, y + 1);
+      return;
+   }
+
+   /** Moves the square down by 2 pixels. The part erases the needed part, call setColor before. */
+   method void moveDownA() {
+      do Screen.drawRectangle(x, y, x + 5, y + 1);
+      let y = y + 2;
+      return;
+   }
+
+   /** Moves the square down by 2 pixels. The part draws the needed part, call setColor before. */
+   method void moveDownB() {
+      do Screen.drawRectangle(x, (y + 5) - 1, x + 5, y + 5);
+      return;
+   }
+
+   /** Moves the square left by 2 pixels. The part erases the needed part, call setColor before. */
+   method void moveLeftA() {
+      do Screen.drawRectangle((x + 5) - 1, y, x + 5, y + 5);
+      let x = x - 2;
+      return;
+   }
+
+   /** Moves the square left by 2 pixels. The part draws the needed part, call setColor before. */
+   method void moveLeftB() {
+      do Screen.drawRectangle(x, y, x + 1, y + 5);
+      return;
+   }
+
+   /** Moves the square right by 2 pixels. The part erases the needed part, call setColor before. */
+   method void moveRightA() {
+      do Screen.drawRectangle(x, y, x + 1, y + 5);
+      let x = x + 2;
+      return;
+   }
+
+   /** Moves the square right by 2 pixels. The part draws the needed part, call setColor before. */
+   method void moveRightB() {
+      do Screen.drawRectangle((x + 5) - 1, y, x + 5, y + 5);
+      return;
+   }
+}

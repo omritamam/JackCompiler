@@ -1,0 +1,168 @@
+function Shot.new 0
+push constant 4
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push constant 0
+pop this 2
+push argument 2
+pop this 3
+push this 3
+push constant 0
+eq
+not
+if-goto IF_TRUE4
+goto IF_END4
+label IF_TRUE4
+push this 3
+push pointer 0
+call Shot.setPrevious 2
+pop temp 0
+label IF_END4
+push pointer 0
+call Shot.draw 1
+pop temp 0
+push pointer 0
+return
+function Shot.dispose 0
+push argument 0
+pop pointer 0
+push this 3
+push constant 0
+eq
+not
+if-goto IF_TRUE0
+goto IF_END0
+label IF_TRUE0
+push this 3
+call Shot.dispose 1
+pop temp 0
+label IF_END0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Shot.getX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Shot.getY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Shot.remove 0
+push argument 0
+pop pointer 0
+push this 2
+push constant 0
+eq
+not
+if-goto IF_TRUE0
+goto IF_END0
+label IF_TRUE0
+push this 2
+push this 3
+call Shot.setNext 2
+pop temp 0
+label IF_END0
+push this 3
+push constant 0
+eq
+not
+if-goto IF_TRUE1
+goto IF_END1
+label IF_TRUE1
+push this 3
+push this 2
+call Shot.setPrevious 2
+pop temp 0
+label IF_END1
+push constant 0
+pop this 2
+push constant 0
+pop this 3
+push constant 0
+return
+function Shot.setNext 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 3
+push constant 0
+return
+function Shot.setPrevious 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 2
+push constant 0
+return
+function Shot.getNext 0
+push argument 0
+pop pointer 0
+push this 3
+return
+function Shot.draw 0
+push argument 0
+pop pointer 0
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Shot.erase 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Shot.move 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Shot.erase 1
+pop temp 0
+push this 1
+push constant 10
+gt
+if-goto IF_TRUE1
+push constant 1
+neg
+return
+goto IF_END1
+label IF_TRUE1
+push this 1
+push constant 10
+sub
+pop this 1
+push pointer 0
+call Shot.draw 1
+pop temp 0
+push constant 0
+return
+label IF_END1

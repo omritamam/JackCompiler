@@ -1,0 +1,93 @@
+class Shot {
+    field int x, y; // screen location of the shot's top-left corner
+    field Shot previous, next;
+
+    /** Constructs a new shot with a given location and size. */
+    constructor Shot new(int Ax, int Ay, Shot Anext) {
+        let x = Ax;
+        let y = Ay;
+        let previous = null;
+        let next = Anext;
+        if (~(next = null)) {
+            do next.setPrevious(this);
+        }
+
+        do draw();
+        return this;
+    }
+
+    /** Disposes this shot. */
+    method void dispose() {
+        if (~(next = null)) {
+            do next.dispose();
+        }
+
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int getX() {
+        return x;
+    }
+
+    method int getY() {
+        return y;
+    }
+
+    method void remove() {
+        if (~(previous = null))
+        {
+            do previous.setNext(next);
+        }
+
+        if (~(next = null))
+        {
+            do next.setPrevious(previous);
+        }
+
+        let previous = null;
+        let next = null;
+        return;
+    }
+
+    method void setNext(Shot Avalue) {
+        let next = Avalue;
+        return;
+    }
+
+    method void setPrevious(Shot Avalue) {
+        let previous = Avalue;
+        return;
+    }
+
+    method Shot getNext() {
+        return next;
+    }
+
+    /** Draws the shot on the screen. */
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x, y + 5);
+        return;
+    }
+
+    /** Erases the shot from the screen. */
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x, y + 5);
+        return;
+    }
+    
+    method boolean move() {
+        do erase();
+
+        if (y > 10) {
+            let y = y - 10;
+            do draw();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+}

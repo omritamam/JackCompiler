@@ -56,7 +56,7 @@ class JackSubroutine:
 
     def generate_vm_code(self) -> list[str]:
         lines = [
-            f'function {self._jack_class.name}.{self._name} {len(self._arguments)}',
+            f'function {self._jack_class.name}.{self._name} {len(self._locals)}',
             *self._PROLOGUE,
         ]
 
@@ -70,7 +70,7 @@ class JackConstructor(JackSubroutine):
     @property
     def _PROLOGUE(self) -> str:
         lines = [
-            f'push constant {len(self.fields)}',
+            f'push constant {len(self._jack_class._fields)}',
             'call Memory.alloc 1',
             'pop pointer 0'
         ]
@@ -83,4 +83,14 @@ class JackFunction(JackSubroutine):
 
 
 class JackMethod(JackSubroutine):
-    _PROLOGUE = []
+    _PROLOGUE = [
+        'push argument 0',
+        'pop pointer 0'
+    ]
+
+    def __init__(self, name: str, return_type: str, jack_class):
+        super().__init__(name, return_type, jack_class)
+
+        # We need to add a dummy argument instead of this (because this was pushed as an argument),
+        # so the indexing to the other arguments will be correct
+        self.add_argument('', '')

@@ -1,0 +1,390 @@
+function Ship.new 0
+push constant 7
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+push argument 1
+call Square.new 2
+pop this 0
+push argument 0
+push constant 7
+add
+push argument 1
+call Square.new 2
+pop this 1
+push argument 0
+push argument 1
+push constant 7
+add
+call Square.new 2
+pop this 2
+push argument 0
+push constant 7
+add
+push argument 1
+push constant 7
+add
+call Square.new 2
+pop this 3
+push argument 0
+push constant 3
+add
+push argument 1
+push constant 14
+add
+call Square.new 2
+pop this 4
+push argument 2
+pop this 6
+push constant 0
+pop this 5
+push this 6
+push constant 0
+eq
+not
+if-goto IF_TRUE7
+goto IF_END7
+label IF_TRUE7
+push this 6
+push pointer 0
+call Ship.setPrevious 2
+pop temp 0
+label IF_END7
+push pointer 0
+call Ship.draw 1
+pop temp 0
+push pointer 0
+return
+function Ship.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call Square.dispose 1
+pop temp 0
+push this 1
+call Square.dispose 1
+pop temp 0
+push this 2
+call Square.dispose 1
+pop temp 0
+push this 3
+call Square.dispose 1
+pop temp 0
+push this 4
+call Square.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Ship.remove 0
+push argument 0
+pop pointer 0
+push this 5
+push constant 0
+eq
+not
+if-goto IF_TRUE0
+goto IF_END0
+label IF_TRUE0
+push this 5
+push this 6
+call Ship.setNext 2
+pop temp 0
+label IF_END0
+push this 6
+push constant 0
+eq
+not
+if-goto IF_TRUE1
+goto IF_END1
+label IF_TRUE1
+push this 6
+push this 5
+call Ship.setPrevious 2
+pop temp 0
+label IF_END1
+push constant 0
+return
+function Ship.setNext 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 6
+push constant 0
+return
+function Ship.setPrevious 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 5
+push constant 0
+return
+function Ship.getNext 0
+push argument 0
+pop pointer 0
+push this 6
+return
+function Ship.hit 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Ship.erase 1
+pop temp 0
+push pointer 0
+call Ship.remove 1
+pop temp 0
+push constant 0
+return
+function Ship.getX 0
+push argument 0
+pop pointer 0
+push this 0
+call Square.getX 1
+return
+function Ship.getY 0
+push argument 0
+pop pointer 0
+push this 0
+call Square.getY 1
+return
+function Ship.draw 0
+push argument 0
+pop pointer 0
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.draw 1
+pop temp 0
+push this 1
+call Square.draw 1
+pop temp 0
+push this 2
+call Square.draw 1
+pop temp 0
+push this 3
+call Square.draw 1
+pop temp 0
+push this 4
+call Square.draw 1
+pop temp 0
+push constant 0
+return
+function Ship.erase 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.draw 1
+pop temp 0
+push this 1
+call Square.draw 1
+pop temp 0
+push this 2
+call Square.draw 1
+pop temp 0
+push this 3
+call Square.draw 1
+pop temp 0
+push this 4
+call Square.draw 1
+pop temp 0
+push constant 0
+return
+function Ship.moveUp 0
+push argument 0
+pop pointer 0
+push this 0
+call Square.canMoveUp 1
+if-goto IF_TRUE0
+goto IF_END0
+label IF_TRUE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.moveUpA 1
+pop temp 0
+push this 1
+call Square.moveUpA 1
+pop temp 0
+push this 2
+call Square.moveUpA 1
+pop temp 0
+push this 3
+call Square.moveUpA 1
+pop temp 0
+push this 4
+call Square.moveUpA 1
+pop temp 0
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.moveUpB 1
+pop temp 0
+push this 1
+call Square.moveUpB 1
+pop temp 0
+push this 2
+call Square.moveUpB 1
+pop temp 0
+push this 3
+call Square.moveUpB 1
+pop temp 0
+push this 4
+call Square.moveUpB 1
+pop temp 0
+label IF_END0
+push constant 0
+return
+function Ship.moveDown 0
+push argument 0
+pop pointer 0
+push this 4
+call Square.canMoveDown 1
+if-goto IF_TRUE0
+goto IF_END0
+label IF_TRUE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.moveDownA 1
+pop temp 0
+push this 1
+call Square.moveDownA 1
+pop temp 0
+push this 2
+call Square.moveDownA 1
+pop temp 0
+push this 3
+call Square.moveDownA 1
+pop temp 0
+push this 4
+call Square.moveDownA 1
+pop temp 0
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.moveDownB 1
+pop temp 0
+push this 1
+call Square.moveDownB 1
+pop temp 0
+push this 2
+call Square.moveDownB 1
+pop temp 0
+push this 3
+call Square.moveDownB 1
+pop temp 0
+push this 4
+call Square.moveDownB 1
+pop temp 0
+label IF_END0
+push constant 0
+return
+function Ship.moveLeft 0
+push argument 0
+pop pointer 0
+push this 0
+call Square.canMoveLeft 1
+if-goto IF_TRUE0
+goto IF_END0
+label IF_TRUE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.moveLeftA 1
+pop temp 0
+push this 1
+call Square.moveLeftA 1
+pop temp 0
+push this 2
+call Square.moveLeftA 1
+pop temp 0
+push this 3
+call Square.moveLeftA 1
+pop temp 0
+push this 4
+call Square.moveLeftA 1
+pop temp 0
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.moveLeftB 1
+pop temp 0
+push this 1
+call Square.moveLeftB 1
+pop temp 0
+push this 2
+call Square.moveLeftB 1
+pop temp 0
+push this 3
+call Square.moveLeftB 1
+pop temp 0
+push this 4
+call Square.moveLeftB 1
+pop temp 0
+label IF_END0
+push constant 0
+return
+function Ship.moveRight 0
+push argument 0
+pop pointer 0
+push this 3
+call Square.canMoveRight 1
+if-goto IF_TRUE0
+goto IF_END0
+label IF_TRUE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.moveRightA 1
+pop temp 0
+push this 1
+call Square.moveRightA 1
+pop temp 0
+push this 2
+call Square.moveRightA 1
+pop temp 0
+push this 3
+call Square.moveRightA 1
+pop temp 0
+push this 4
+call Square.moveRightA 1
+pop temp 0
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+push this 0
+call Square.moveRightB 1
+pop temp 0
+push this 1
+call Square.moveRightB 1
+pop temp 0
+push this 2
+call Square.moveRightB 1
+pop temp 0
+push this 3
+call Square.moveRightB 1
+pop temp 0
+push this 4
+call Square.moveRightB 1
+pop temp 0
+label IF_END0
+push constant 0
+return

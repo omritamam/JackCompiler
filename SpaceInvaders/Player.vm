@@ -1,19 +1,26 @@
-function Square.new 0
-push constant 3
+function Player.new 0
+push constant 2
 call Memory.alloc 1
 pop pointer 0
-push argument 0
+push constant 235
 pop this 0
-push argument 1
+push constant 215
 pop this 1
-push argument 2
-pop this 2
-push pointer 0
-call Square.draw 1
-pop temp 0
 push pointer 0
 return
-function Square.dispose 0
+function Player.shoot 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 20
+add
+push this 1
+push constant 6
+sub
+push argument 1
+call Shot.new 3
+return
+function Player.dispose 0
 push argument 0
 pop pointer 0
 push pointer 0
@@ -21,7 +28,29 @@ call Memory.deAlloc 1
 pop temp 0
 push constant 0
 return
-function Square.draw 0
+function Player.clear 0
+push argument 0
+pop pointer 0
+push constant 235
+pop this 0
+push constant 215
+pop this 1
+push pointer 0
+call Player.draw 1
+pop temp 0
+push constant 0
+return
+function Player.getX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Player.getY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Player.draw 0
 push argument 0
 pop pointer 0
 push constant 1
@@ -31,16 +60,16 @@ pop temp 0
 push this 0
 push this 1
 push this 0
-push this 2
+push constant 40
 add
 push this 1
-push this 2
+push constant 10
 add
 call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return
-function Square.erase 0
+function Player.erase 0
 push argument 0
 pop pointer 0
 push constant 0
@@ -49,72 +78,20 @@ pop temp 0
 push this 0
 push this 1
 push this 0
-push this 2
+push constant 40
 add
 push this 1
-push this 2
+push constant 10
 add
 call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return
-function Square.incSize 0
+function Player.moveUp 0
 push argument 0
 pop pointer 0
 push this 1
-push this 2
-add
-push constant 254
-lt
-push this 0
-push this 2
-add
-push constant 510
-lt
-and
-if-goto IF_TRUE0
-goto IF_END0
-label IF_TRUE0
-push pointer 0
-call Square.erase 1
-pop temp 0
-push this 2
-push constant 2
-add
-pop this 2
-push pointer 0
-call Square.draw 1
-pop temp 0
-label IF_END0
-push constant 0
-return
-function Square.decSize 0
-push argument 0
-pop pointer 0
-push this 2
-push constant 2
-gt
-if-goto IF_TRUE0
-goto IF_END0
-label IF_TRUE0
-push pointer 0
-call Square.erase 1
-pop temp 0
-push this 2
-push constant 2
-sub
-pop this 2
-push pointer 0
-call Square.draw 1
-pop temp 0
-label IF_END0
-push constant 0
-return
-function Square.moveUp 0
-push argument 0
-pop pointer 0
-push this 1
-push constant 1
+push constant 133
 gt
 if-goto IF_TRUE0
 goto IF_END0
@@ -124,20 +101,20 @@ call Screen.setColor 1
 pop temp 0
 push this 0
 push this 1
-push this 2
+push constant 10
 add
-push constant 1
+push constant 5
 sub
 push this 0
-push this 2
+push constant 40
 add
 push this 1
-push this 2
+push constant 10
 add
 call Screen.drawRectangle 4
 pop temp 0
 push this 1
-push constant 2
+push constant 6
 sub
 pop this 1
 push constant 1
@@ -147,23 +124,23 @@ pop temp 0
 push this 0
 push this 1
 push this 0
-push this 2
+push constant 40
 add
 push this 1
-push constant 1
+push constant 5
 add
 call Screen.drawRectangle 4
 pop temp 0
 label IF_END0
 push constant 0
 return
-function Square.moveDown 0
+function Player.moveDown 0
 push argument 0
 pop pointer 0
 push this 1
-push this 2
+push constant 10
 add
-push constant 254
+push constant 220
 lt
 if-goto IF_TRUE0
 goto IF_END0
@@ -174,15 +151,15 @@ pop temp 0
 push this 0
 push this 1
 push this 0
-push this 2
+push constant 40
 add
 push this 1
-push constant 1
+push constant 5
 add
 call Screen.drawRectangle 4
 pop temp 0
 push this 1
-push constant 2
+push constant 6
 add
 pop this 1
 push constant 1
@@ -191,26 +168,71 @@ call Screen.setColor 1
 pop temp 0
 push this 0
 push this 1
-push this 2
+push constant 10
 add
-push constant 1
+push constant 5
 sub
 push this 0
-push this 2
+push constant 40
 add
 push this 1
-push this 2
+push constant 10
 add
 call Screen.drawRectangle 4
 pop temp 0
 label IF_END0
 push constant 0
 return
-function Square.moveLeft 0
+function Player.bomb 2
+push argument 0
+pop pointer 0
+push constant 180
+push constant 127
+push constant 128
+push this 1
+sub
+call Math.abs 1
+sub
+call Math.min 2
+push constant 255
+push constant 256
+push this 0
+sub
+call Math.abs 1
+sub
+call Math.min 2
+pop local 1
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+label LOOP2
+push local 0
+push local 1
+lt
+not
+if-goto LOOP_END2
+push constant 5
+call Sys.wait 1
+pop temp 0
+push this 0
+push this 1
+push local 0
+call Screen.drawCircle 3
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto LOOP2
+label LOOP_END2
+push constant 0
+return
+function Player.moveLeft 0
 push argument 0
 pop pointer 0
 push this 0
-push constant 1
+push constant 5
 gt
 if-goto IF_TRUE0
 goto IF_END0
@@ -219,21 +241,21 @@ push constant 0
 call Screen.setColor 1
 pop temp 0
 push this 0
-push this 2
+push constant 40
 add
-push constant 1
+push constant 5
 sub
 push this 1
 push this 0
-push this 2
+push constant 40
 add
 push this 1
-push this 2
+push constant 10
 add
 call Screen.drawRectangle 4
 pop temp 0
 push this 0
-push constant 2
+push constant 6
 sub
 pop this 0
 push constant 1
@@ -243,23 +265,23 @@ pop temp 0
 push this 0
 push this 1
 push this 0
-push constant 1
+push constant 5
 add
 push this 1
-push this 2
+push constant 10
 add
 call Screen.drawRectangle 4
 pop temp 0
 label IF_END0
 push constant 0
 return
-function Square.moveRight 0
+function Player.moveRight 0
 push argument 0
 pop pointer 0
 push this 0
-push this 2
+push constant 40
 add
-push constant 510
+push constant 505
 lt
 if-goto IF_TRUE0
 goto IF_END0
@@ -270,15 +292,15 @@ pop temp 0
 push this 0
 push this 1
 push this 0
-push constant 1
+push constant 5
 add
 push this 1
-push this 2
+push constant 10
 add
 call Screen.drawRectangle 4
 pop temp 0
 push this 0
-push constant 2
+push constant 6
 add
 pop this 0
 push constant 1
@@ -286,16 +308,16 @@ neg
 call Screen.setColor 1
 pop temp 0
 push this 0
-push this 2
+push constant 40
 add
-push constant 1
+push constant 5
 sub
 push this 1
 push this 0
-push this 2
+push constant 40
 add
 push this 1
-push this 2
+push constant 10
 add
 call Screen.drawRectangle 4
 pop temp 0
