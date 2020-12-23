@@ -86,7 +86,7 @@ class Lexer:
         """Returns the next unparsed char while skipping comments"""
         # Make sure that next char doesn't begin a new comment
         self._skip(comments=True)
-        
+
         # Backup position if peek was asked
         backup_position = self.position
 

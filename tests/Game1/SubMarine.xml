@@ -139,7 +139,7 @@
           <symbol> = </symbol>
           <expression>
             <term>
-              <integerConstant> 0 </integerConstant>
+              <integerConstant> push constant 0 </integerConstant>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -150,7 +150,7 @@
           <symbol> = </symbol>
           <expression>
             <term>
-              <integerConstant> 512 </integerConstant>
+              <integerConstant> push constant 512 </integerConstant>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -298,7 +298,7 @@
                       </term>
                       <symbol> / </symbol>
                       <term>
-                        <integerConstant> 2 </integerConstant>
+                        <integerConstant> push constant 2 </integerConstant>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -330,7 +330,7 @@
                       </term>
                       <symbol> / </symbol>
                       <term>
-                        <integerConstant> 2 </integerConstant>
+                        <integerConstant> push constant 2 </integerConstant>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -353,7 +353,7 @@
                   </term>
                   <symbol> / </symbol>
                   <term>
-                    <integerConstant> 2 </integerConstant>
+                    <integerConstant> push constant 2 </integerConstant>
                   </term>
                 </expression>
                 <symbol> ) </symbol>
@@ -386,7 +386,7 @@
                       </term>
                       <symbol> / </symbol>
                       <term>
-                        <integerConstant> 25 </integerConstant>
+                        <integerConstant> push constant 25 </integerConstant>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -428,7 +428,7 @@
                       </term>
                       <symbol> / </symbol>
                       <term>
-                        <integerConstant> 25 </integerConstant>
+                        <integerConstant> push constant 25 </integerConstant>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -451,7 +451,7 @@
                   </term>
                   <symbol> / </symbol>
                   <term>
-                    <integerConstant> 8 </integerConstant>
+                    <integerConstant> push constant 8 </integerConstant>
                   </term>
                 </expression>
                 <symbol> ) </symbol>
@@ -484,7 +484,7 @@
                       </term>
                       <symbol> / </symbol>
                       <term>
-                        <integerConstant> 12 </integerConstant>
+                        <integerConstant> push constant 12 </integerConstant>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -526,7 +526,7 @@
                       </term>
                       <symbol> / </symbol>
                       <term>
-                        <integerConstant> 25 </integerConstant>
+                        <integerConstant> push constant 25 </integerConstant>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -552,7 +552,7 @@
               </term>
               <symbol> + </symbol>
               <term>
-                <integerConstant> 3 </integerConstant>
+                <integerConstant> push constant 3 </integerConstant>
               </term>
             </expression>
           </expressionList>
@@ -658,7 +658,7 @@
                 </term>
                 <symbol> = </symbol>
                 <term>
-                  <integerConstant> 1 </integerConstant>
+                  <integerConstant> push constant 1 </integerConstant>
                 </term>
               </expression>
               <symbol> ) </symbol>
@@ -699,7 +699,7 @@
                             </term>
                             <symbol> / </symbol>
                             <term>
-                              <integerConstant> 2 </integerConstant>
+                              <integerConstant> push constant 2 </integerConstant>
                             </term>
                           </expression>
                           <symbol> ) </symbol>
@@ -743,7 +743,7 @@
                             </term>
                             <symbol> / </symbol>
                             <term>
-                              <integerConstant> 2 </integerConstant>
+                              <integerConstant> push constant 2 </integerConstant>
                             </term>
                           </expression>
                           <symbol> ) </symbol>
@@ -767,9 +767,8 @@
               <symbol> = </symbol>
               <expression>
                 <term>
-                  <symbol> - </symbol>
                   <term>
-                    <integerConstant> 1 </integerConstant>
+                    <integerConstant> push constant 1 </integerConstant>
                   </term>
                 </term>
               </expression>
@@ -790,9 +789,8 @@
                 </term>
                 <symbol> = </symbol>
                 <term>
-                  <symbol> - </symbol>
                   <term>
-                    <integerConstant> 1 </integerConstant>
+                    <integerConstant> push constant 1 </integerConstant>
                   </term>
                 </term>
               </expression>
@@ -834,7 +832,7 @@
                             </term>
                             <symbol> / </symbol>
                             <term>
-                              <integerConstant> 2 </integerConstant>
+                              <integerConstant> push constant 2 </integerConstant>
                             </term>
                           </expression>
                           <symbol> ) </symbol>
@@ -878,7 +876,7 @@
                             </term>
                             <symbol> / </symbol>
                             <term>
-                              <integerConstant> 2 </integerConstant>
+                              <integerConstant> push constant 2 </integerConstant>
                             </term>
                           </expression>
                           <symbol> ) </symbol>
@@ -902,7 +900,7 @@
               <symbol> = </symbol>
               <expression>
                 <term>
-                  <integerConstant> 1 </integerConstant>
+                  <integerConstant> push constant 1 </integerConstant>
                 </term>
               </expression>
               <symbol> ; </symbol>
@@ -919,7 +917,7 @@
             </term>
             <symbol> = </symbol>
             <term>
-              <integerConstant> 1 </integerConstant>
+              <integerConstant> push constant 1 </integerConstant>
             </term>
           </expression>
           <symbol> ) </symbol>
@@ -1157,7 +1155,7 @@
           <symbol> = </symbol>
           <expression>
             <term>
-              <integerConstant> 0 </integerConstant>
+              <integerConstant> push constant 0 </integerConstant>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -1171,7 +1169,7 @@
             </term>
             <symbol> &lt; </symbol>
             <term>
-              <integerConstant> 5 </integerConstant>
+              <integerConstant> push constant 5 </integerConstant>
             </term>
           </expression>
           <symbol> ) </symbol>
@@ -1212,7 +1210,7 @@
               <expressionList>
                 <expression>
                   <term>
-                    <integerConstant> 300 </integerConstant>
+                    <integerConstant> push constant 300 </integerConstant>
                   </term>
                 </expression>
               </expressionList>
@@ -1255,7 +1253,7 @@
                 </term>
                 <symbol> + </symbol>
                 <term>
-                  <integerConstant> 1 </integerConstant>
+                  <integerConstant> push constant 1 </integerConstant>
                 </term>
               </expression>
               <symbol> ; </symbol>
@@ -1269,7 +1267,7 @@
               <expressionList>
                 <expression>
                   <term>
-                    <integerConstant> 300 </integerConstant>
+                    <integerConstant> push constant 300 </integerConstant>
                   </term>
                 </expression>
               </expressionList>

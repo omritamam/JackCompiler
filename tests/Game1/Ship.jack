@@ -122,6 +122,9 @@ return;
  #############################################################################*/
 method Bomb shoot()
 {
+  do b.hello(); // this = b
+                // subroutine_name = Bomb.hello
+                // expressions = []
    return Bomb.new(_x,(_y+_height+1), _bombSize, _bombSpeed);
 }
 

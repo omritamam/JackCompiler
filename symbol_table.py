@@ -1,7 +1,10 @@
+from typing import Mapping
+
+
 class SymbolTable:
-    _class_scope_table: hash
-    _subroutine_scope_table: hash
-    _varCounter: hash
+    _class_scope_table: Mapping[str, str]
+    _subroutine_scope_table: Mapping[str, str]
+    _varCounter: Mapping[str, int]
 
     def __init__(self):
         self._class_scope_table = {}
@@ -26,7 +29,7 @@ class SymbolTable:
         val = self._varCounter[kind]
         self._varCounter[kind] += 1
         return val
-    
+
     def typeOf(self, name: str):
         if name in self._class_scope_table:
             return self._class_scope_table[name]["type"]

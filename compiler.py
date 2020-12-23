@@ -3,6 +3,7 @@ import sys
 import os
 from typing import Sequence
 from xml_compiler import JackXmlCompiler
+from vm_compiler import JackVmCompiler
 from lexer import TokenParseError
 
 
@@ -24,12 +25,25 @@ def files_from_path(path: str) -> Sequence[str]:
 
 
 def analyze_file(input_path: str, output_path: str) -> None:
-    """Compiles a given file using JackXmlCompiler"""
+    """Analyzes a given file using JackXmlCompiler"""
     try:
         with open(input_path, 'r') as input_obj:
             with open(output_path, 'w') as output_obj:
                 compiler = JackXmlCompiler(input_obj.read())
                 compiler.analyze(output_obj)
+
+    except TokenParseError as err:
+        print(f'{input_path}:')
+        print(err)
+
+
+def compile_file(input_path: str, output_path: str) -> None:
+    """Compiles a given file using JackVmCompiler"""
+    try:
+        with open(input_path, 'r') as input_obj:
+            with open(output_path, 'w') as output_obj:
+                compiler = JackVmCompiler(input_obj.read(), output_obj)
+                compiler.compile()
 
     except TokenParseError as err:
         print(f'{input_path}:')
@@ -56,6 +70,10 @@ def main() -> int:
         for obj_path in files:
             output_path = f'{os.path.splitext(obj_path)[0]}.xml'
             analyze_file(obj_path, output_path)
+
+    for obj_path in files:
+        output_path = f'{os.path.splitext(obj_path)[0]}.vm'
+        compile_file(obj_path, output_path)
 
     return 0
 

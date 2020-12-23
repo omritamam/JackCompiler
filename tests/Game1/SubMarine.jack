@@ -76,9 +76,10 @@ method void draw()
  #############################################################################*/  
 method void move()
 {
- var boolean change;
- var int oldX;
- let oldX = _x;
+	var boolean change;
+	var int oldX;
+	
+	let oldX = _x;
 
 	if ((_direction = 1 ) & ( ((_x+_speed) > (_right-(_width/2))) | ((_x+_speed) = (_right-(_width/2))) ))
 	{
