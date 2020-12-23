@@ -11,12 +11,12 @@ import subprocess
 # You might need to set execute permissions for TextComparer.sh first:
 #     chmod u+rwx ../../tools/TextComparer.sh
 
-# TEXT_COMPARER = r"../../tools/TextComparer.sh"
-TEXT_COMPARER = r"..\..\..\tools\TextComparer.bat"
+TEXT_COMPARER = r"../../../tools/TextComparer.sh"
+# TEXT_COMPARER = r"..\..\..\tools\TextComparer.bat"
 
 # Command line to run your analyzer (without a parameter)
-# JACK_ANALYZER_CMD = r"./JackAnalyzer"  # if JackAnalyzer - files must be in same directory
-JACK_ANALYZER_CMD = r"python ./compiler.py --analyze"
+JACK_ANALYZER_CMD = r"./JackAnalyzer"  # if JackAnalyzer - files must be in same directory
+# JACK_ANALYZER_CMD = r"python ./compiler.py --analyze"
 # JACK_ANALYZER_CMD = "python3 src/Main.py"
 
 # Path to directory of test files (.xml & .xml.cmp for each test)
