@@ -43,3 +43,4 @@
 # **** Beginning of the actual Makefile ****
 all:
 	chmod a+x ./JackAnalyzer
+	chmod a+x ./JackCompiler

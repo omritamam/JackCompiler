@@ -4,22 +4,32 @@ Yossi Rosilio, ID 314843459, yossi.rosilio@mail.huji.ac.il
 Omri Tamam, ID 315564112, omri.tamam@mail.huji.ac.il
 ===============================================================================
 
-                           Project 9 - Compilation
-                           -----------------------  
+                           Project 11 - Compilation (Continued)
+                           ------------------------------------
 
 Submitted Files
 ---------------
-JackAnalyzer            Bash wrapper for compiler.py --analyze
-README                  This file.
-Makefile                Makefile for chmoding the compiler script.
-xml_writer.py           Implementation of an XML file generator.
-xml_compiler.py         Implementation of a compiler that generates XML hierarchy
-                        from a given Jack file.
-compiler.py             Front-end of the Jack compiler.
-lexer                   A Jack-lexical analysis package.
-lexer/__init__.py       lexer's __init__ file
-lexer/lexer.py          Contains Lexer class implementation and related errors.
-lexer/token.py          Contains Token class implementation.
+JackCompiler                        Bash wrapper for compiler.py
+JackAnalyzer                        Bash wrapper for compiler.py --analyze
+README                              This file.
+Makefile                            Makefile for chmoding the compiler script.
+xml_writer.py                       Implementation of an XML file generator.
+xml_compiler.py                     Implementation of a compiler that generates XML hierarchy
+                                    from a given Jack file.
+compiler.py                         Front-end of the Jack compiler.
+lexer                               A Jack-lexical analysis package.
+lexer/__init__.py                   lexer's __init__ file
+lexer/lexer.py                      Contains Lexer class implementation and related errors.
+lexer/token.py                      Contains Token class implementation.
+vm_compiler.py                      A compiler that generates VM code from Jack code.
+jack_elements                       A package that contains types for holding parsed jack code,
+                                    and generate vm code for each element.
+jack_elements/__init__.py           jack_elements' __init__ file.
+jack_elements/Expression.py         A parsed Jack expression and term representation.
+jack_elements/JackClass.py          A parsed Jack class representation.
+jack_elements/JackSubroutine.py     A parsed Jack subroutine representation.
+jack_elements/Statement.py          A parsed Jack statement representation.
+jack_elements/Variable.py           A parsed Jack variable representation.
 
 Remarks
 -------
