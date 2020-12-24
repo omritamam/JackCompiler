@@ -4,7 +4,7 @@ from itertools import chain
 
 
 class Statement:
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         raise NotImplementedError
 
 
@@ -26,7 +26,7 @@ class IfStatement(Statement):
         self._true_statements = true_statements
         self._false_statements = false_statements
 
-    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+    def generate_vm_code(self, statement_indicator: str):
         # Create lists of generated statements
         true_statements = list(chain(*[statement.generate_vm_code(f'{statement_indicator}.T{i}')
                                        for i, statement in enumerate(self._true_statements)]))
@@ -62,7 +62,7 @@ class LetStatement(Statement):
         self._variable_term = variable_term
         self._value = value
 
-    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+    def generate_vm_code(self, statement_indicator: str):
         return [
             # Push the evaluated expression to the stack
             *self._value.generate_vm_code(),
@@ -84,7 +84,7 @@ class WhileStatement(Statement):
         self._condition = condition
         self._statements = statements
 
-    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+    def generate_vm_code(self, statement_indicator: str):
         # Create lists of generated statements
         statements = list(chain(*[statement.generate_vm_code(f'{statement_indicator}.{i}')
                                   for i, statement in enumerate(self._statements)]))
@@ -113,7 +113,7 @@ class DoStatement(Statement):
         super().__init__()
         self._call_term = call_term
 
-    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+    def generate_vm_code(self, statement_indicator: str):
         # Evaluate the call term, and then dump its result
         return [
             *self._call_term.generate_vm_code(),
@@ -134,7 +134,7 @@ class ReturnStatement(Statement):
         super().__init__()
         self._expression = expression
 
-    def generate_vm_code(self, statement_indicator: str) -> list[str]:
+    def generate_vm_code(self, statement_indicator: str):
         # Push the return value and return
         if self._expression is None:
             return [

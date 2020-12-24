@@ -54,7 +54,7 @@ class JackSubroutine:
         """Add a sequence of parsed statements to the subroutine's statements"""
         self._statements.extend(statements)
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         lines = [
             f'function {self._jack_class.name}.{self._name} {len(self._locals)}',
             *self._PROLOGUE,

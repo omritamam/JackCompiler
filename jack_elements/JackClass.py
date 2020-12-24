@@ -8,7 +8,6 @@ class JackClass:
     _name: str
     _statics: Mapping[str, Static]
     _fields: Mapping[str, Field]
-    _subroutines: list[JackSubroutine]
     _this: This
 
     def __init__(self, name: str):

@@ -22,7 +22,7 @@ class SubroutineCallTerm(Term):
         self._subroutine_name = subroutine_name
         self._expressions = expressions[:]
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         lines = []
         for expression in self._expressions:
             # Push the expression to the stack
@@ -46,7 +46,7 @@ class IntegerConstant(Term):
         super().__init__()
         self._value = value
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         return [f'push constant {self._value}']
 
 
@@ -60,7 +60,7 @@ class StringConstant(Term):
         super().__init__()
         self._value = value
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         lines = [
             # Allocate string
             f'push constant {len(self._value)}',
@@ -91,7 +91,7 @@ class KeywordConstant(Term):
         assert(value in ('true', 'false', 'null'))
         self._value = value
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         if self._value == 'true':
             return [
                 'push constant 1',
@@ -117,7 +117,7 @@ class VariableTerm(Term):
         self._variable = variable
         self._offset = offset
 
-    def generate_vm_set_code(self) -> list[str]:
+    def generate_vm_set_code(self):
         if self._offset is None:
             return [f'pop {self._variable.VM_SEGMENT} {self._variable.index}']
 
@@ -135,7 +135,7 @@ class VariableTerm(Term):
                 'pop that 0'
             ]
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         lines = [f'push {self._variable.VM_SEGMENT} {self._variable.index}']
 
         if self._offset is not None:
@@ -164,7 +164,7 @@ class BracketsTerm(Term):
         super().__init__()
         self._expression = expression
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         return self._expression.generate_vm_code()
 
 
@@ -183,7 +183,7 @@ class BinaryOperation(Expression):
         self._first_expression = first_expression
         self._second_expression = second_expression
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         return [
             *self._first_expression.generate_vm_code(),
             *self._second_expression.generate_vm_code(),
@@ -204,7 +204,7 @@ class UnaryOperation(Term):
         super().__init__()
         self._expression = expression
 
-    def generate_vm_code(self) -> list[str]:
+    def generate_vm_code(self):
         return [
             *self._expression.generate_vm_code(),
             self.INSTRUCTION
