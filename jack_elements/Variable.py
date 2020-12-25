@@ -1,11 +1,25 @@
-from typing import NamedTuple
-
-
-class Variable(NamedTuple):
-    name: str
-    type: str
-    index: int
+class Variable:
+    _name: str
+    _type: str
+    _index: int
     VM_SEGMENT: str
+
+    def __init__(self, name: str, type: str, index: int):
+        self._name = name
+        self._type = type
+        self._index = index
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def index(self):
+        return self._index
 
     def __str__(self):
         return f'{self.name}'
