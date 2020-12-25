@@ -45,7 +45,7 @@ class JackVmCompiler:
     def compile(self) -> None:
         parsed_class = self._parse_class()
         if not self._lexer.finished:
-            next_token = self.self._lexer.next()
+            next_token = self._lexer.next()
             raise TokenTypeError('EOF', next_token.value, next_token.position)
 
         if parsed_class.name != os.path.splitext(os.path.basename(self._writer.name))[0]:
@@ -128,6 +128,7 @@ class JackVmCompiler:
             class_name = this.type
             subroutine_name = first_identifier
 
+        expressions: list[Expression]
         if this is None:
             expressions = []
         else:

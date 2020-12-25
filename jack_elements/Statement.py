@@ -4,7 +4,7 @@ from itertools import chain
 
 
 class Statement:
-    def generate_vm_code(self):
+    def generate_vm_code(self, statement_indicator: str):
         raise NotImplementedError
 
 
@@ -122,7 +122,7 @@ class DoStatement(Statement):
 
 
 class ReturnStatement(Statement):
-    _expression: Expression
+    _expression: Union[Expression, None]
 
     def __repr__(self):
         if self._expression is None:
@@ -130,7 +130,7 @@ class ReturnStatement(Statement):
         else:
             return f'return {self._expression}'
 
-    def __init__(self, expression: Expression):
+    def __init__(self, expression: Union[Expression, None]):
         super().__init__()
         self._expression = expression
 

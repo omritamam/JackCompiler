@@ -1,9 +1,10 @@
 from .Variable import Variable
-from typing import Sequence
+from typing import Sequence, Union
 
 
 class Expression:
-    pass
+    def generate_vm_code(self):
+        raise NotImplementedError
 
 
 class Term(Expression):
@@ -104,7 +105,7 @@ class KeywordConstant(Term):
 
 class VariableTerm(Term):
     _variable: Variable
-    _offset: Expression
+    _offset: Union[Expression, None]
 
     def __repr__(self):
         if self._offset is None:
@@ -112,7 +113,7 @@ class VariableTerm(Term):
         else:
             return f'{self._variable}[{self._offset}]'
 
-    def __init__(self, variable: Variable, offset: Expression = None):
+    def __init__(self, variable: Variable, offset: Union[Expression, None] = None):
         super().__init__()
         self._variable = variable
         self._offset = offset

@@ -5,6 +5,7 @@ class Variable(NamedTuple):
     name: str
     type: str
     index: int
+    VM_SEGMENT: str
 
     def __str__(self):
         return f'{self.name}'
